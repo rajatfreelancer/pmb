@@ -29,7 +29,9 @@
             </li>
             <li class="active"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.user.index') }}">User</a></li>
+            <li><a href="{{ route('admin.staff.index') }}">Staff</a></li>
             <li><a href="{{ route('admin.local.backup') }}">DB BackUp</a></li>
+            <li><a href="{{ route('admin.txt.send.sms') }}">Send Sms</a></li>
         </ul>
 
     </div>

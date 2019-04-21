@@ -43,6 +43,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         
         Route::post('get-duration', 'UserController@getDuration')->name('get.duration');
         Route::post('get-denomination', 'UserController@getDenominaton')->name('get.denomination');
+
+        Route::resource('staff', 'AdminController');
+        Route::get('/txt-send-sms/', 'DashboardController@txtSendSms')->name('txt.send.sms');
+        Route::post('/send_sms', 'DashboardController@sendSms')->name('send.sms');
         
     });
 

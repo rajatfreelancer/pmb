@@ -39,4 +39,17 @@ class DashboardController extends Controller
         // Please check ny command line.
         \Artisan::call("backup:run --only-db");
     }
+    public function txtSendSms(){
+        return view('admin.txtsms.txtsms');
+    }
+
+
+    public function sendSms(Request $request)
+    {
+
+        $result = Admin::sendSms($request->number, $request->message);
+        // Process your response here
+        echo $result;
+        die;
+    }
 }

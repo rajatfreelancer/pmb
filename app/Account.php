@@ -43,9 +43,9 @@ class Account extends Model
         $this->nominee_name = $request->nominee_name;
         $this->nominee_relation = $request->nominee_relation;
         $this->nominee_share = $request->nominee_share;
-        $this->second_nominee_name = $request->second_nominee_name;
-        $this->second_nominee_relation = $request->second_nominee_relation;
-        $this->second_nominee_share = $request->second_nominee_share;        
+        $this->second_nominee_name = (!empty($request->second_nominee_name)) ? $request->second_nominee_name : 'NULL';
+        $this->second_nominee_relation = (!empty($request->second_nominee_relation)) ? $request->second_nominee_relation : 'NULL';
+        $this->second_nominee_share = (!empty($request->second_nominee_share)) ? $request->second_nominee_share : 'NULL';
         $this->account_type = $request->account_type;
         $this->interest_rate = $request->interest_rate;
         $this->denomination_amount = $request->denomination_amount;

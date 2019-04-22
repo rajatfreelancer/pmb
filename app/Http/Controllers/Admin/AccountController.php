@@ -74,7 +74,7 @@ class AccountController extends Controller
         
             if($request->documents) {
                 foreach($request->documents as $documents) {
-                    SystemFile::saveUploadedFile($document, $model, 'document');
+                    SystemFile::saveUploadedFile($documents, $model, 'document');
                 }
             }
             
@@ -177,4 +177,9 @@ class AccountController extends Controller
 
         return response()->json(['data' => $users, 'status' => 200]);        
     }
+
+    public function dailyDeposite(){
+        return view('admin.daily_deposite.index');
+    }
+
 }

@@ -78,7 +78,7 @@ class User extends Authenticatable
         $array = [            
             'name' => 'required|string',
             'last_name' => 'required|string',
-            'number' => 'numeric|min:0',
+            'number' => 'numeric|min:11',
             'father_spouse' => 'required|string',
             'address' => 'required',
             'city' => 'required',

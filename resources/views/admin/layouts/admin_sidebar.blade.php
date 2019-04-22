@@ -32,6 +32,7 @@
             <li><a href="{{ route('admin.staff.index') }}">Staff</a></li>
             <li><a href="{{ route('admin.local.backup') }}">DB BackUp</a></li>
             <li><a href="{{ route('admin.txt.send.sms') }}">Send Sms</a></li>
+            <li><a href="{{ route('admin.daily.deposite') }}">Daily Deposite</a></li>
         </ul>
 
     </div>

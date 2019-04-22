@@ -16,7 +16,7 @@
                         <h5>Add User</h5>
                     </div>
                     <div class="ibox-content">
-                        <form method="post" class="form-horizontal" action="{{ route('admin.user.store') }}"  enctype="Multipart/form-data">
+                        <form method="post" class="form-horizontal" action="{{ route('admin.accounts.store') }}"  enctype="Multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <div class="col-md-3">
@@ -24,7 +24,7 @@
                                 </div>
                                 <div class="col-md-6">
                                 <select title="None Selected" name="user_id" id="users_select2" class="form-control users_select2" required>
-                                    <option value="{{ $user->text }}" selected="selected">{{ $user->text }}</option>
+                                    <option value="{{ $user->id }}" selected="selected">{{ $user->text }}</option>
                                 </select>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" name="nominee_share"
-                                           value="100">
+                                           value="100" max="100" id="first_nominee_share">
                                 </div>
                             </div>
                             <button class="btn btn-primary" id="add_second_nominee">Add Second Nominee</button>
@@ -121,7 +121,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="second_nominee_share"
-                                            value="">
+                                            value="" id="second_nominee_share">
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +169,28 @@ $(document).ready(function(){
 
     $("#add_second_nominee").click(function(e){
         e.preventDefault();
-        $("#second_nominee_div").show();
-    })
+        $("#second_nominee_div").toggle();
+    });
+
+    $('#first_nominee_share').keyup(function (e) {
+        var share1 = $(this).val();
+        if(isNaN(share1)) {
+            alert('please enter only number');
+            $(this).val('');
+            return false;
+        }
+    });
+    $('#first_nominee_share').blur(function (e) {
+
+        var share1 = $(this).val();
+        if(share1 > 100){
+            alert('please enter equal or less then 100');
+            $(this).val('');
+            return false;
+        }
+        var share2 = 100- share1;
+        $('#second_nominee_share').val(share2);
+    });
     $("#account_type").change(function(){
         var val = $(this).val();    
         if (val != "{{ App\Account::TYPE_MONTHLY_INCOME }}" && val != "{{ App\Account::TYPE_LOAN }}"){    

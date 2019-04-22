@@ -13,6 +13,11 @@ class Account extends Model
     const TYPE_MONTHLY_INCOME = 4;
     const TYPE_LOAN = 5;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     protected $appends = [
         'ori_account_number',
         'maturity_date',

@@ -34,12 +34,9 @@ class AccountController extends Controller
     {
         $accounts = Account::select('accounts.*');
 
-        $datatable = DataTables::eloquent($accounts)
+        $datatable = \DataTables::eloquent($accounts)
             ->addColumn('applicant_name', function ($row) {
                 return $row->user->first_name.' '.$row->user->last_name;
-            })
-            ->addColumn("policy_date", function ($row) {
-                return $row->policy_date;
             })
             ->addColumn("policy_date", function ($row) {
                 return $row->policy_date;
@@ -54,7 +51,8 @@ class AccountController extends Controller
                 return $row->term;
             })
             ->addColumn("account_type", function ($row) {
-                return $row->getAccountTypeOptions($row->account_type);
+                //return $row->getAccountTypeOptions($row->account_type);
+                return 'Deposite';
             })
             ->addColumn("maturity_date", function ($row) {
                 return $row->maturity_date;
@@ -75,6 +73,10 @@ class AccountController extends Controller
                 return $row->required_amount;
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
+
+        $datatable = $datatable->make(true);
+        return $datatable;
+        //return $datatable;
     }
 
     /**

@@ -37,7 +37,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::resource('user', 'UserController');
         Route::resource('accounts', 'AccountController');
         Route::get('get-users-list', 'AccountController@getUsersList')->name('get.users.list');
-        
+        Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
+
         /*Route::get('/local', 'DashboardController@localBackup')->name('local.backup');*/
         Route::get('/local', 'DashboardController@runBackup')->name('local.backup');
         

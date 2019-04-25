@@ -30,6 +30,53 @@ class AccountController extends Controller
         return view('admin.accounts.index',$data);
     }
 
+    public function getData(Request $request)
+    {
+        $accounts = Account::select('accounts.*');
+
+        $datatable = DataTables::eloquent($accounts)
+            ->addColumn('applicant_name', function ($row) {
+                return $row->user->first_name.' '.$row->user->last_name;
+            })
+            ->addColumn("policy_date", function ($row) {
+                return $row->policy_date;
+            })
+            ->addColumn("policy_date", function ($row) {
+                return $row->policy_date;
+            })
+            ->addColumn("policy_code", function ($row) {
+                return $row->ori_account_number;
+            })
+            ->addColumn("amount", function ($row) {
+                return $row->denomination_amount;
+            })
+             ->addColumn("term", function ($row) {
+                return $row->term;
+            })
+            ->addColumn("account_type", function ($row) {
+                return $row->getAccountTypeOptions($row->account_type);
+            })
+            ->addColumn("maturity_date", function ($row) {
+                return $row->maturity_date;
+            })
+            ->addColumn("installment_number", function ($row) {
+                return $row->installment_number;
+            })
+            ->addColumn("paid_installment", function ($row) {
+                return $row->paid_installment;
+            })
+            ->addColumn("unpaid_installment", function ($row) {
+                return $row->unpaid_installment;
+            })
+            ->addColumn("paid_amount", function ($row) {
+                return $row->paid_amount;
+            })
+            ->addColumn("required_amount", function ($row) {
+                return $row->required_amount;
+            });
+        $datatable = $datatable->rawColumns(['actions', 'item_tags']);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -178,8 +225,9 @@ class AccountController extends Controller
         return response()->json(['data' => $users, 'status' => 200]);        
     }
 
-    public function dailyDeposite(){
-        return view('admin.daily_deposite.index');
+    public function dailyDeposite()
+    {
+        return view('admin.accounts.index');
     }
 
 }

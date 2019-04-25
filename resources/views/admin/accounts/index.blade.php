@@ -37,7 +37,6 @@
                                 <th>Req. Amount</th>
                                 <th>BA Code</th>
                                 <th>Contact No.</th>
-
                             </tr>
                             </thead>
                             <tbody>

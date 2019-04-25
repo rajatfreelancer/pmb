@@ -40,7 +40,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">Father Spouse*</label>
+                                    <label class="control-label">S/D/W/O*</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" name="father_spouse"
@@ -49,11 +49,11 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">Email*</label>
+                                    <label class="control-label">Contact Number*</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" name="email"
-                                           value="{{ old('email',$user->email) }}" readonly>
+                                    <input type="text" class="form-control" name="number"
+                                           value="{{ old('number',$user->number) }}" required>
                                 </div>
                             </div>
 
@@ -66,16 +66,6 @@
                                            value="{{ old('address',$user->address) }}">
                                 </div>
 
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <label class="control-label">Number*</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" name="number"
-                                           value="{{ old('number',$user->number) }}" required>
-                                </div>
                             </div>
 
 
@@ -110,6 +100,17 @@
                                            value="{{ old('country',$user->country) }}">
                                 </div>
 
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="control-label">Profile Picture</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="profile_picture">
+                                </div>
+
+                                <img src="{{ asset('uploads') }}/{{ $user->profile_pic }}" width="100px" height="100px">
                             </div>
 
                             <button class="btn btn-primary" type="submit">Save</button>

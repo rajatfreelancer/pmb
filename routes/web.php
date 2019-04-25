@@ -47,6 +47,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::resource('staff', 'AdminController');
         Route::get('/txt-send-sms/', 'DashboardController@txtSendSms')->name('txt.send.sms');
         Route::post('/send_sms', 'DashboardController@sendSms')->name('send.sms');
+
+        Route::get('daily-deposite', 'AccountController@dailyDeposite')->name('daily.deposite');
+        Route::get('daily-deposite-ajax', 'AccountController@dailyDepositeAjax')->name('daily.deposite.ajax');
+
         
     });
 

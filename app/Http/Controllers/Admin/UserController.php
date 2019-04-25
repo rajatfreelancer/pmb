@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Models\SystemFile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Account;
@@ -65,7 +66,13 @@ class UserController extends Controller
             $model->setData($request);
             $model->prefix = $model->getMemberPrefix();
             $model->member_id = $model->getMemberId();
-            $model->save();            
+
+            if ($request->hasFile('profile_picture')) {
+                $image =  SystemFile::uploadImage($request->file('profile_picture'));
+                $model->profile_pic = $image;
+            }
+
+            $model->save();
             \DB::commit();
             return redirect()->route('admin.user.index')->with('success', 'User is successfully added.');
         /*} catch (\Exception $e) {
@@ -119,6 +126,17 @@ class UserController extends Controller
 
         try {
             $model->setData($request);
+
+            if($request->hasFile('profile_picture')) {
+
+                $old_image = $model->profile_pic;
+                if($old_image != null){
+                    $path =public_path(). '/uploads/'.$old_image;
+                    unlink($path);
+                }
+                $image =  SystemFile::uploadImage($request->file('profile_picture'));
+                $model->profile_pic = $image;
+            }
             $model->save();
             return redirect()->route('admin.user.index')->with('success', 'User is successfully updated.');
         } catch (\Exception $e) {

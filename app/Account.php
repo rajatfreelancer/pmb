@@ -52,7 +52,8 @@ class Account extends Model
         $this->duration = $request->duration;
         $this->prefix = $this->getMemberPrefix();
         $this->account_number = $this->getAccountNumber();
-        $this->create_user_id = \Auth::guard('admins')->user()->id;   
+        $this->create_user_id = \Auth::guard('admins')->user()->id;
+        $this->user_id = $request->user_id;
     }
 
     public function getMemberPrefix()
@@ -170,5 +171,13 @@ class Account extends Model
         return $id;
     }
 
+    public function rules()
+    {
+        $array = [
+
+        ];
+
+        return $array;
+    }
 
 }

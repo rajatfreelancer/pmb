@@ -77,4 +77,14 @@ class SystemFile extends Model
         return false;
     }
 
+    public static function uploadImage($image){
+
+        $file = $image;
+        $destinationPath = public_path(). '/uploads/';
+        $filename = time().'_'.$file->getClientOriginalName();
+        $file->move($destinationPath, $filename);
+
+        return $filename;
+    }
+
 }

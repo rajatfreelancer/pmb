@@ -13,7 +13,6 @@
                     <div class="panel-heading">
                         {{ @$title }}
                         User
-
                         <span class="pull-right">
                             <a href="{{ route('admin.user.create') }}" class="btn btn-xs btn-primary">Add</a>
                         </span>
@@ -24,20 +23,20 @@
                         <table width="100%" class="table table-striped table-bordered table-hover dataTables-example">
                             <thead>
                             <tr>
-                                <th>Member Id</th>
-                                <th>Account Holder Name</th>
-                                <th>Account No.</th>
-                                <th>Father/Spouse Name</th>
-                                <th>Address</th>
+                                <th>Applicant Name</th>
+                                <th>Policy Date</th>
+                                <th>Policy Code</th>
+                                <th>Amount</th>
+                                <th>Term</th>
+                                <th>Mode</th>                                
+                                <th>Due Date</th>
+                                <th>Inst No</th>
+                                <th>Paid Inst</th>
+                                <th>Unpaid Inst</th>
+                                <th>Paid Amount</th>                                
+                                <th>Req. Amount</th>
+                                <th>BA Code</th>
                                 <th>Contact No.</th>
-                                <th>BA ID</th>
-                                <th>Installment Amount</th>
-                                <th>Duration</th>
-                                <th>Maturity Amount</th>
-                                <th>Date of Issue</th>
-                                <th>Account Type</th>
-                                <th>Nominee Name</th>
-                                <th>Date of Maturity</th>                                
                             </tr>
                             </thead>
                             <tbody>

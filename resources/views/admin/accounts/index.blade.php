@@ -35,7 +35,7 @@
                                 <th>Unpaid Inst</th>
                                 <th>Paid Amount</th>                                
                                 <th>Req. Amount</th>
-                                <th>BA Code</th>
+                                <th>Actions</th>
                                {{-- <th>Contact No.</th>--}}
                             </tr>
                             </thead>
@@ -109,7 +109,7 @@
                 {"data": "unpaid_installment", "name": 'unpaid_installment'},
                 {"data": "paid_amount", "name": 'paid_amount'},
                 {"data": "required_amount", "name": 'required_amount'},
-                /*{"data": "operations", "name": "operations", 'orderable': false, 'searchable': false},*/
+                {"data": "actions", "name": "actions"},
                 {"data": "updated_at", "name": "updated_at", 'searchable': false, 'visible': false}
             ];
 

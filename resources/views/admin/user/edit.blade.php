@@ -15,7 +15,7 @@
                         <h5>Edit User</h5>
                     </div>
                     <div class="ibox-content">
-                        <form method="post" class="form-horizontal" action="{{ route('admin.user.update',$user->id) }}">
+                        <form method="post" class="form-horizontal" action="{{ route('admin.user.update',$user->id) }}" enctype="Multipart/form-data">
                             {{ csrf_field() }}
                             {{ method_field('PUT') }}
                             <div class="form-group">
@@ -109,8 +109,10 @@
                                 <div class="col-md-6">
                                     <input type="file" name="profile_picture">
                                 </div>
+                                @if(!empty($user->profile_pic))
+                                    <img src="{{ asset('uploads') }}/{{ $user->profile_pic }}" width="100px" height="100px">
+                                @endif
 
-                                <img src="{{ asset('uploads') }}/{{ $user->profile_pic }}" width="100px" height="100px">
                             </div>
 
                             <button class="btn btn-primary" type="submit">Save</button>

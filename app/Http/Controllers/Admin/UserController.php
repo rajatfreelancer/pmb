@@ -26,7 +26,7 @@ class UserController extends Controller
     public function index()
     {
         $data['users'] = User::with('account')->orderBy('id')->get();
-        $data['title'] = "User";
+        $data['title'] = "Customer";
         return view('admin.user.index',$data);
     }
 
@@ -37,8 +37,8 @@ class UserController extends Controller
      */
     public function create()
     {
-         $data['title'] = "Add User";
-        $data['maintitle'] = "User";
+         $data['title'] = "Add Customer";
+        $data['maintitle'] = "Customer";
         $data['mainlink'] = "admin.user.index";
         return view('admin.user.add',$data);
     }
@@ -100,8 +100,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data['title'] = "Edit User";
-        $data['maintitle'] = "User";
+        $data['title'] = "Edit Customer";
+        $data['maintitle'] = "Customer";
         $data['mainlink'] = "admin.user.index";
         $data['user'] = User::find($id);
         return view('admin.user.edit',$data);

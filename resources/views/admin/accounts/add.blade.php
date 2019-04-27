@@ -49,6 +49,14 @@
                                 <input type="text" class="form-control" name="duration"/> 
                                 </div>
                             </div>
+                            <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Policy Date</label>
+                                </div>
+                                <div class="col-md-6">
+                                <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="policy_date" /> 
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-md-3">
@@ -153,6 +161,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
 $(document).ready(function(){
+    $(".datepicker").datepicker({format:"yyyy-mm-dd"});
     $('.users_select2').select2({
         ajax: {
     url: "{{ url('admin/get-users-list') }}",

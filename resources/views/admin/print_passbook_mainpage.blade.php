@@ -24,14 +24,14 @@
         <div class="col-md-9">
             <div class="col-md-12 row">
                 <div class="col-md-3">Member Id</div>
-                <div class="col-sm-3">{{ (!empty($account->prefix)) ? $account->prefix : '' }}</div>
+                <div class="col-sm-3">{{ $account->user->ori_member_id}}</div>
                 <div class="col-sm-3">Account No</div>
-                <div class="col-sm-3">{{ (!empty($account->account_number)) ? $account->account_number : '' }}</div>
+                <div class="col-sm-3">{{ $account->ori_account_number }}</div>
             </div>
             <div class="col-md-12 row">
                 <div class="col-md-3">Account Holder Name</div>
                 <div class="col-sm-3">{{ (!empty($account->user->name)) ? $account->user->name : '' }}</div>
-                <div class="col-sm-3">S/D/H/F</div>
+                <div class="col-sm-3">S/D/Wo</div>
                 <div class="col-sm-3">{{ (!empty($account->user->father_spouse)) ? $account->user->father_spouse : '' }}</div>
             </div>
             <div class="col-md-12 row">
@@ -43,7 +43,7 @@
                 <div class="col-md-3">Contact No. </div>
                 <div class="col-sm-3">{{ (!empty($account->user->number)) ? $account->user->number : '' }}</div>
                 <div class="col-sm-3">BA ID</div>
-                <div class="col-sm-3"></div>
+                <div class="col-sm-3">{{ $account->user->createUser->name }}</div>
             </div>
             <div class="col-md-12 row">
                 <div class="col-md-3">Installemnt Ammount</div>
@@ -53,12 +53,12 @@
                 <div class="col-md-3">Maturity Ammount. </div>
                 <div class="col-sm-3">{{ (!empty($account->maturity_amount)) ? $account->maturity_amount : '' }} (On Regular A/C)</div>
                 <div class="col-sm-3">CA ID</div>
-                <div class="col-sm-3"></div>
+                <div class="col-sm-3">{{ $account->createUser->name }}</div>
             </div>
             <br>
             <div class="col-md-12 row">
                 <div class="col-md-3">Date OF Issue. </div>
-                <div class="col-sm-3"></div>
+                <div class="col-sm-3">{{ $account->policy_date }}</div>
                 <div class="col-sm-3">Account Type</div>
                 <div class="col-sm-3">{{ (!empty($account->account_type)) ? $account->getTypeOptions($account->account_type) : '' }}</div>
             </div>

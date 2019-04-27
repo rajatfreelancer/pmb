@@ -80,5 +80,10 @@ class Admin extends Authenticatable
 
         return $result;
     }
+
+    public static function getAddress()
+    {
+        return "";
+    }
     
 }

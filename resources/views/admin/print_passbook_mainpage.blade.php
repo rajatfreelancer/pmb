@@ -8,7 +8,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <style>
+
+
+        @media print {
+            .page-break	{ display: block; page-break-before: always; }
+        }
+    </style>
+
+    <title>PassBook</title>
 </head>
 <body>
 
@@ -87,6 +95,39 @@
             <div>Auth Sign & Stamp</div>
         </div>
     </div>
+</div>
+
+
+<div class="container page-break">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Particular/Transaction ID</th>
+            <th scope="col">Credit Amount</th>
+            <th scope="col">Debit Amount</th>
+            <th scope="col">Total Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if(!empty($transactions))
+            @foreach($transactions as $transaction)
+        <tr>
+            <th scope="row">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}</th>
+            <td>{{ $transaction->id }}</td>
+            @if($transaction->method == \App\AccountTransaction::MEDTHOD_CREDIT)
+                <td>{{ $transaction->amount }}</td>
+                <td></td>
+            @else
+                <td></td>
+                <td>{{ $transaction->amount }}</td>
+            @endif
+            <td>Total</td>
+        </tr>
+        @endforeach
+        @endif
+        </tbody>
+    </table>
 </div>
 
 <!-- Optional JavaScript -->

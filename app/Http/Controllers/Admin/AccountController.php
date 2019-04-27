@@ -73,7 +73,7 @@ class AccountController extends Controller
                 return $row->payable_amount;
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add T</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -138,7 +138,7 @@ class AccountController extends Controller
             }
             
             \DB::commit();
-            return redirect()->route('admin.accounts')->with('success', 'Account is successfully added.');
+        return redirect()->route('admin.accounts')->with('success', 'Account is successfully added.');
         /*} catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());
         }*/
@@ -244,8 +244,8 @@ class AccountController extends Controller
 
     public  function printPassbook($id){
         $account = Account::find($id);
-
-        return view('admin.print_passbook_mainpage', compact('account'));
+        $transactions = AccountTransaction::where('account_id',$id)->get();
+        return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 
 

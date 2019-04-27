@@ -51,6 +51,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::get('/txt-send-sms/', 'DashboardController@txtSendSms')->name('txt.send.sms');
         Route::post('/send_sms', 'DashboardController@sendSms')->name('send.sms');
 
+        Route::resource('transactions', 'TransactionController');
+
 
 
 

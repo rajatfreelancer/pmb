@@ -169,7 +169,6 @@ class UserController extends Controller
             'data' => $duration];
     }
 
-    
     public function getDenominaton(Request $request)
     {
         $denomination = Account::getDenominationArray($request->val);

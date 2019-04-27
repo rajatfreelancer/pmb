@@ -34,12 +34,9 @@ class AccountController extends Controller
     {
         $accounts = Account::select('accounts.*');
 
-        $datatable = DataTables::eloquent($accounts)
+        $datatable = \DataTables::eloquent($accounts)
             ->addColumn('applicant_name', function ($row) {
                 return $row->user->first_name.' '.$row->user->last_name;
-            })
-            ->addColumn("policy_date", function ($row) {
-                return $row->policy_date;
             })
             ->addColumn("policy_date", function ($row) {
                 return $row->policy_date;
@@ -54,7 +51,7 @@ class AccountController extends Controller
                 return $row->term;
             })
             ->addColumn("account_type", function ($row) {
-                return $row->getAccountTypeOptions($row->account_type);
+                return $row->getTypeOptions($row->account_type);
             })
             ->addColumn("maturity_date", function ($row) {
                 return $row->maturity_date;
@@ -73,8 +70,15 @@ class AccountController extends Controller
             })
             ->addColumn("required_amount", function ($row) {
                 return $row->required_amount;
+            })
+            ->addColumn("actions", function ($row) {
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
+
+        $datatable = $datatable->make(true);
+        return $datatable;
+        //return $datatable;
     }
 
     /**
@@ -225,9 +229,17 @@ class AccountController extends Controller
         return response()->json(['data' => $users, 'status' => 200]);        
     }
 
-    public function dailyDeposite()
+    public function accounts()
     {
         return view('admin.accounts.index');
     }
+
+    public  function printPassbook($id){
+        $account = Account::find($id);
+
+        return view('admin.print_passbook_mainpage', compact('account'));
+    }
+
+
 
 }

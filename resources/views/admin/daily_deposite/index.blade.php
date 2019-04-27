@@ -44,7 +44,7 @@
 @endsection
 @section('js')
     <script type="text/javascript">
-        var list_table_tab;
+        /*var list_table_tab;
         var hidden_columns = true;
 
         $(function () {
@@ -96,6 +96,6 @@
                 order: order
             });
 
-        });
+        });*/
     </script>
 @append

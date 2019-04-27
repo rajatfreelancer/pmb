@@ -37,7 +37,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::resource('user', 'UserController');
         Route::resource('accounts', 'AccountController');
         Route::get('get-users-list', 'AccountController@getUsersList')->name('get.users.list');
-        
+        Route::get('accounts', 'AccountController@accounts')->name('accounts');
+        Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
+        Route::get('print_passbook/{id}', 'AccountController@printPassbook')->name('print.passbook');
+
         /*Route::get('/local', 'DashboardController@localBackup')->name('local.backup');*/
         Route::get('/local', 'DashboardController@runBackup')->name('local.backup');
         
@@ -48,8 +51,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::get('/txt-send-sms/', 'DashboardController@txtSendSms')->name('txt.send.sms');
         Route::post('/send_sms', 'DashboardController@sendSms')->name('send.sms');
 
-        Route::get('daily-deposite', 'AccountController@dailyDeposite')->name('daily.deposite');
-        Route::get('daily-deposite-ajax', 'AccountController@dailyDepositeAjax')->name('daily.deposite.ajax');
+
+
 
         
     });

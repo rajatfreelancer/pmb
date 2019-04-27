@@ -127,8 +127,9 @@ class UserController extends Controller
         try {
             $model->setData($request);
 
+            //return $request->all();
             if($request->hasFile('profile_picture')) {
-
+                //dd('hi');
                 $old_image = $model->profile_pic;
                 if($old_image != null){
                     $path =public_path(). '/uploads/'.$old_image;

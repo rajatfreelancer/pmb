@@ -37,7 +37,7 @@ class AccountController extends Controller
        // echo '<pre>'; print_r($accounts->get());exit;
         $datatable = \DataTables::eloquent($accounts)
             ->addColumn('applicant_name', function ($row) {
-                return $row->user->first_name.' '.$row->user->last_name;
+                return $row->user->name.' '.$row->user->last_name;
             })
             ->addColumn("policy_date", function ($row) {
                 return date("Y-m-d", strtotime($row->policy_date));

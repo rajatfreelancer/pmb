@@ -83,7 +83,7 @@ class Admin extends Authenticatable
 
     public static function getAddress()
     {
-        return "";
+        return "SCO 88 2ND F SECTOR 0C CHANDIGARH 160036--SMB001";
     }
     
 }

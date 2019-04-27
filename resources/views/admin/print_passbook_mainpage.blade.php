@@ -23,61 +23,62 @@
     <div class="row">
         <div class="col-md-9">
             <div class="col-md-12 row">
-                <div class="col-md-3">Member Id</div>
+                <div class="col-md-3"><b>Member Id</b></div>
                 <div class="col-sm-3">{{ $account->user->ori_member_id}}</div>
-                <div class="col-sm-3">Account No</div>
+                <div class="col-sm-3"><b>Account No</b></div>
                 <div class="col-sm-3">{{ $account->ori_account_number }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Account Holder Name</div>
+                <div class="col-md-3"><b>Account Holder Name</b></div>
                 <div class="col-sm-3">{{ (!empty($account->user->name)) ? $account->user->name : '' }}</div>
-                <div class="col-sm-3">S/D/Wo</div>
+                <div class="col-sm-3"><b>S/D/Wo</b></div>
                 <div class="col-sm-3">{{ (!empty($account->user->father_spouse)) ? $account->user->father_spouse : '' }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Address</div>
+                <div class="col-md-3"><b>Address</b></div>
                 <div class="col-sm-9">{{ (!empty($account->user->address)) ? $account->user->address : '' }}</div>
             </div>
             <br>
             <div class="col-md-12 row">
-                <div class="col-md-3">Contact No. </div>
+                <div class="col-md-3"><b>Contact No.</b></div>
                 <div class="col-sm-3">{{ (!empty($account->user->number)) ? $account->user->number : '' }}</div>
-                <div class="col-sm-3">BA ID</div>
+                <div class="col-sm-3"><b>BA ID</b></div>
                 <div class="col-sm-3">{{ $account->user->createUser->name }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Installemnt Ammount</div>
+                <div class="col-md-3"><b>Installemnt Ammount</b></div>
                 <div class="col-sm-9">{{ (!empty($account->denomination_amount)) ? $account->denomination_amount : '' }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Maturity Ammount. </div>
+                <div class="col-md-3"><b>Maturity Ammount.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->maturity_amount)) ? $account->maturity_amount : '' }} (On Regular A/C)</div>
-                <div class="col-sm-3">CA ID</div>
+                <div class="col-sm-3"><b>CA ID</b></div>
                 <div class="col-sm-3">{{ $account->createUser->name }}</div>
             </div>
             <br>
             <div class="col-md-12 row">
-                <div class="col-md-3">Date OF Issue. </div>
+                <div class="col-md-3"><b>Date OF Issue.</b> </div>
                 <div class="col-sm-3">{{ $account->policy_date }}</div>
-                <div class="col-sm-3">Account Type</div>
+                <div class="col-sm-3"><b>Account Type</b></div>
                 <div class="col-sm-3">{{ (!empty($account->account_type)) ? $account->getTypeOptions($account->account_type) : '' }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Nominee Name. </div>
+                <div class="col-md-3"><b>Nominee Name.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->nominee_name)) ? $account->nominee_name : '' }}</div>
-                <div class="col-md-3">Date OF Maturity. </div>
+                <div class="col-md-3"><b>Date OF Maturity.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->maturity_date)) ? $account->maturity_date : '' }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3">Branch Address</div>
-                <div class="col-sm-9"></div>
+                <div class="col-md-3"><b>Branch Address</b></div>
+                <div class="col-sm-9">{{ App\Admin::getAddress() }}</div>
             </div>
         </div>
         <div class="col-md-3">
+        <div class="picture_div" style="height:200px; border:1px solid #000;">
             @if(!empty($account->user->profile_pic))
                 <img width="50%" height="150px" src="{{ asset('uploads') }}/{{ $account->user->profile_pic }}">
             @endif
-
+</div>
 
             <br>
             <br>

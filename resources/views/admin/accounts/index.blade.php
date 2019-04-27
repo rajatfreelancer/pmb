@@ -12,7 +12,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {{ @$title }}
-                        User
+                        Accounts
                         <span class="pull-right">
                             <a href="{{ route('admin.accounts.create') }}" class="btn btn-xs btn-primary">Add</a>
                         </span>

@@ -13,6 +13,9 @@ class Account extends Model
     const TYPE_MONTHLY_INCOME = 4;
     const TYPE_LOAN = 5;
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_CLOSED = 2;
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -20,27 +23,56 @@ class Account extends Model
 
     protected $appends = [
         'ori_account_number',
-        'maturity_date',
-        'maturity_amount'
+        'payable_amount',
+        'term',
+        'installment_number',
+        'paid_installment',
+        'unpaid_installment',
+        'paid_amount'    
     ];
+
+    public function getInstallmentNumberAttribute()
+    {
+        $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
+        return $no_of_inst > 0 ? $no_of_inst : 0;
+    }
+
+    public function getPaidInstallmentAttribute()
+    {
+        return $this->transactions->sum('amount')/$this->denomination_amount;
+    }
+
+    public function getPaidAmountAttribute()
+    {
+        return $this->transactions->sum('amount');
+    }
+
+    public function getUnpaidInstallmentAttribute()
+    {
+        return $this->installment_number - $this->paid_installment;
+    }
 
     public function getOriAccountNumberAttribute()
     {
         return Admin::getTygetPrefixpeOptions($this->account_type).$this->prefix.$this->account_number;
     }
 
-    public function getMaturityAmountAttribute()
+    public function getTermAttribute()
     {
-        $details = json_decode($this->account_type_details, true);
-        return $details['maturity_amount'];
-
+        if ($this->account_type == Account::TYPE_DD){
+            return $this->getDays($this->policy_date, $this->maturity_date).' Days';
+        }
+        return $this->duration.' months';
     }
 
-    public function getMaturityDateAttribute()
+    public function transactions()
     {
-        $duration = $this->duration;
-        $date = date("Y-m-d", strtotime("+".$this->duration.' months'));
-        return $date;
+        return $this->hasMany(AccountTransaction::class, 'account_id')->where('method', AccountTransaction::MEDTHOD_CREDIT);
+    }
+
+    public function createUser()
+    {
+        return $this->belongsTo(Admin::class, 'create_user_id');
     }
 
     public function setData($request)
@@ -59,6 +91,22 @@ class Account extends Model
         $this->account_number = $this->getAccountNumber();
         $this->create_user_id = \Auth::guard('admins')->user()->id;
         $this->user_id = $request->user_id;
+        $this->policy_date = $request->policy_date;
+        $this->maturity_date = date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
+        $this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
+        $this->status = Account::STATUS_ACTIVE;
+    }
+
+    public function getPayableAmountAttribute()
+    {
+        if($this->account_type == self::TYPE_DD) {
+            $no_of_days = $this->getDays($this->policy_date, $this->maturity_date);
+            return $this->denomination_amount * $no_of_days;
+        }elseif($this->account_type == self::TYPE_RD) {
+            return  $this->denomination_amount * $this->duration;
+        }
+
+        return $this->denomination_amount;
     }
 
     public function getMemberPrefix()
@@ -183,6 +231,17 @@ class Account extends Model
         ];
 
         return $array;
+    }
+
+    public static function getDays($from, $to)
+    {
+        $to = \Carbon\Carbon::createFromFormat('Y-m-d', $to);
+
+        $from = \Carbon\Carbon::createFromFormat('Y-m-d', $from);
+
+        $diff_in_days = $to->diffInDays($from);
+
+        return $diff_in_days - 1;
     }
 
 }

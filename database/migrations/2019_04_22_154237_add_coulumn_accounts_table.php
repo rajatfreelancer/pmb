@@ -14,7 +14,7 @@ class AddCoulumnAccountsTable extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->dateTime('policy_date')->nullable();
+            $table->date('policy_date')->nullable();
         });
     }
 

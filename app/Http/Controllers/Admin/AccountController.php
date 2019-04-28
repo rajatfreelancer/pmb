@@ -34,12 +34,13 @@ class AccountController extends Controller
     {
         $accounts = Account::select('accounts.*');
 
+       // echo '<pre>'; print_r($accounts->get());exit;
         $datatable = \DataTables::eloquent($accounts)
             ->addColumn('applicant_name', function ($row) {
-                return $row->user->first_name.' '.$row->user->last_name;
+                return $row->user->name.' '.$row->user->last_name;
             })
             ->addColumn("policy_date", function ($row) {
-                return $row->policy_date;
+                return date("Y-m-d", strtotime($row->policy_date));
             })
             ->addColumn("policy_code", function ($row) {
                 return $row->ori_account_number;
@@ -69,7 +70,7 @@ class AccountController extends Controller
                 return $row->paid_amount;
             })
             ->addColumn("required_amount", function ($row) {
-                return $row->required_amount;
+                return $row->payable_amount;
             })
             ->addColumn("actions", function ($row) {
                 return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a>';
@@ -95,8 +96,8 @@ class AccountController extends Controller
         }
 
         $data['title'] = "Add Account";
-        $data['maintitle'] = "Account";
-        $data['mainlink'] = "admin.accounts.index";
+        $data['maintitle'] = "Accounts";
+        $data['mainlink'] = "admin.accounts";
         return view('admin.accounts.add',$data);
     }
 
@@ -120,6 +121,13 @@ class AccountController extends Controller
         //echo '<pre>'; print_r($request->all());exit;
        // try {
            \DB::beginTransaction();
+
+           $model = Account::where('status',Account::STATUS_ACTIVE)->where('account_type', Account::TYPE_DD)->where('user_id', $request->user_id)->first();
+
+           if(!empty($model)){
+                return redirect()->back()->with('error', 'This member already have active account.');
+           }
+           $model = new Account();
             $model->setData($request);
             $model->save();  
         
@@ -130,7 +138,7 @@ class AccountController extends Controller
             }
             
             \DB::commit();
-            return redirect()->route('admin.user.index')->with('success', 'User is successfully added.');
+            return redirect()->route('admin.accounts')->with('success', 'Account is successfully added.');
         /*} catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());
         }*/

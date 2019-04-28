@@ -22,10 +22,10 @@ class CreateAccountsTable extends Migration
             $table->integer('duration')->nullable();
             $table->float('interest_rate')->nullable();         
             $table->float('maturity_amount')->nullable();         
-            $table->float('maturity_date')->nullable();  
+            $table->date('maturity_date')->nullable();  
             $table->float('actual_interest_rate')->nullable();         
             $table->float('actual_maturity_amount')->nullable();         
-            $table->float('actual_maturity_date')->nullable();         
+            $table->date('actual_maturity_date')->nullable();         
             $table->string('nominee_name');
             $table->string('nominee_relation');
             $table->string('nominee_share');

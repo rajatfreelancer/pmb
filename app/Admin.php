@@ -80,5 +80,10 @@ class Admin extends Authenticatable
 
         return $result;
     }
+
+    public static function getAddress()
+    {
+        return "SCO 88 2ND F SECTOR 0C CHANDIGARH 160036--SMB001";
+    }
     
 }

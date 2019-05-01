@@ -244,7 +244,7 @@ class AccountController extends Controller
 
     public  function printPassbook($id){
         $account = Account::find($id);
-        $transactions = AccountTransaction::where('account_id',$id)->get();
+        $transactions = AccountTransaction::where('account_id',$id)->orderBy('paid_date')->get();
         return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 

@@ -113,7 +113,7 @@
         @if(!empty($transactions))
             @foreach($transactions as $transaction)
         <tr>
-            <th scope="row">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}</th>
+            <th scope="row">{{ \Carbon\Carbon::parse($transaction->paid_date)->format('d-m-Y') }}</th>
             <td>{{ $transaction->id }}</td>
             @if($transaction->method == \App\AccountTransaction::MEDTHOD_CREDIT)
                 <td>{{ $transaction->amount }}</td>
@@ -122,7 +122,7 @@
                 <td></td>
                 <td>{{ $transaction->amount }}</td>
             @endif
-            <td>Total</td>
+            <td>{{ $transaction->total }}</td>
         </tr>
         @endforeach
         @endif

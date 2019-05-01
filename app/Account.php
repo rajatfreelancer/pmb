@@ -94,6 +94,15 @@ class Account extends Model
         $this->policy_date = $request->policy_date;
         $this->maturity_date = date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
         $this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
+        
+        if($this->account_type == self::TYPE_DD) {
+            $interest_amt = $this->denomination_amount;
+            $days = $this->getDays($this->policy_date, $this->maturity_date);
+            for($i = 1; $i <= $days; $i++) {
+                $interest_amt = $interest_amt + $interest_amt * $this->interest_rate/100;
+            }
+            $this->maturity_amount = $interest_amt; 
+        }        
         $this->status = Account::STATUS_ACTIVE;
     }
 

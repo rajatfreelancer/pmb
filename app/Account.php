@@ -31,6 +31,34 @@ class Account extends Model
         'paid_amount'    
     ];
 
+    public function getMaturityAmountAttribute()
+    {
+        if($this->account_type == self::TYPE_DD) {
+            $interest_amt = $this->denomination_amount;
+            $days = $this->getDays($this->policy_date, $this->maturity_date);   
+            /*$days = 5;         
+            for($i = 1; $i <= $days; $i++) {                
+                $interest_amt = $interest_amt + (int) ($interest_amt * $this->interest_rate/100);
+                
+            }*/
+            $years = round($this->duration/12);
+            $interest_amt = self::interest($this->payable_amount, $years, $this->interest_rate, $days);            
+            return round($interest_amt); 
+        }
+
+        return ($this->payable_amount + $this->payable_amount * $this->interest_rate/100);        
+    }
+
+    public static function interest($investment,$year,$rate=15,$n=1){
+        $accumulated=0;
+        if ($year > 1){
+                $accumulated=self::interest($investment,$year-1,$rate,$n);
+                }
+        $accumulated += $investment;
+        $accumulated = $accumulated * pow(1 + $rate/(100 * $n),$n);
+        return $accumulated;
+        }
+
     public function getInstallmentNumberAttribute()
     {
         $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
@@ -49,7 +77,10 @@ class Account extends Model
 
     public function getUnpaidInstallmentAttribute()
     {
-        return $this->installment_number - $this->paid_installment;
+        if($this->installment_number >= $this->paid_installment) {
+            return $this->installment_number - $this->paid_installment;
+        }
+        return 0;
     }
 
     public function getOriAccountNumberAttribute()

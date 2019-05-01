@@ -28,7 +28,33 @@
                                     <input type="hidden" name="account_id" value="{{ $id }}">
                                 </div>
                             </div>
+
                             <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="control-label">Paid Date*</label>
+                                </div>
+                                <div class="col-md-6">
+                                <input type="text" name="paid_date" class="form-control datepicker" value="{{ old('paid_date') }}">
+                                </div>
+                            
+                            </div>
+
+                            @if($auth_user->hasRole('Admin'))
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="control-label">CA ID</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select name="create_user_id" id="create_user_id" class="form-control">
+                                    <option value="">Select CA</option>
+                                    @foreach(App\Admin::where('id', '!=', $auth_user->id) as $id => $name)
+                                    <option value="{{ $id }}">{{ $id.'-'.$name }}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
+                            <?php /*<div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Method</label>
                                 </div>
@@ -40,7 +66,7 @@
                                     @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div>*/?>
 
 
                             <button class="btn btn-primary" type="submit">Save</button>
@@ -58,4 +84,9 @@
     <!-- /.row -->
 @endsection
 @section('js')
+<script>
+$(document).ready(function(){
+    $(".datepicker").datepicker();
+})
+</script>
 @endsection

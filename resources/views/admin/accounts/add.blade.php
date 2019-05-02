@@ -58,6 +58,23 @@
                                 </div>
                             </div>
 
+                            <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Maturity Amount</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="maturity_amount"/>
+                                </div>
+                            </div>
+                            <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Maturity Date</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="maturity_date" />
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Denomination Amount</label>

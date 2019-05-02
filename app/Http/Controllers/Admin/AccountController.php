@@ -73,7 +73,7 @@ class AccountController extends Controller
                 return $row->payable_amount;
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add T</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -244,7 +244,7 @@ class AccountController extends Controller
 
     public  function printPassbook($id){
         $account = Account::find($id);
-        $transactions = AccountTransaction::where('account_id',$id)->get();
+        $transactions = AccountTransaction::where('account_id',$id)->orderBy('paid_date')->get();
         return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 

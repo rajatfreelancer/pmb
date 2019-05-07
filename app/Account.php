@@ -40,7 +40,7 @@ class Account extends Model
             for($i = 1; $i <= $days; $i++) {                
                 $interest_amt = $interest_amt + (int) ($interest_amt * $this->interest_rate/100);
                 
-            }*/
+            }
             $years = round($this->duration/12);
             $n = 1;
             $interest_amt = self::interest($this->denomination_amount, $years, $this->interest_rate, $n);            

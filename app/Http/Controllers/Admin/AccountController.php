@@ -248,6 +248,53 @@ class AccountController extends Controller
         return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 
+    public function export($type){
+
+        $data = Account::with('user')->get()->toArray();
+
+
+        return \Excel::create('accounts', function($excel) use ($data) {
+
+            $excel->sheet('mySheet', function($sheet) use ($data)
+            {
+                $sheet->cell('A1', function($cell) {$cell->setValue('Applicant Name');   });
+                $sheet->cell('B1', function($cell) {$cell->setValue('Policy Date');   });
+                $sheet->cell('C1', function($cell) {$cell->setValue('Policy Code');   });
+                $sheet->cell('D1', function($cell) {$cell->setValue('Amount');   });
+                $sheet->cell('E1', function($cell) {$cell->setValue('Term');   });
+                $sheet->cell('F1', function($cell) {$cell->setValue('Mode');   });
+                $sheet->cell('G1', function($cell) {$cell->setValue('Due Date');   });
+                $sheet->cell('H1', function($cell) {$cell->setValue('Inst No');   });
+                $sheet->cell('I1', function($cell) {$cell->setValue('Paid Inst');   });
+                $sheet->cell('J1', function($cell) {$cell->setValue('Unpaid Inst');   });
+                $sheet->cell('K1', function($cell) {$cell->setValue('Paid Amount');   });
+                $sheet->cell('L1', function($cell) {$cell->setValue('Req. Amount');   });
+                if (!empty($data)) {
+                    foreach ($data as $key => $value) {
+                        $i= $key+2;
+                        $sheet->cell('A'.$i, $value['user']['name'].''.$value['user']['last_name']);
+                        $sheet->cell('B'.$i, date("Y-m-d", strtotime($value['policy_date'])));
+                        $sheet->cell('C'.$i, $value['ori_account_number']);
+                        $sheet->cell('D'.$i, $value['denomination_amount']);
+                        $sheet->cell('E'.$i, $value['term']);
+                        $sheet->cell('F'.$i, Account::getTypeOptions($value['account_type']));
+                        $sheet->cell('G'.$i, $value['maturity_date']);
+                        $sheet->cell('H'.$i, $value['installment_number']);
+                        $sheet->cell('I'.$i, $value['paid_installment']);
+                        $sheet->cell('J'.$i, $value['unpaid_installment']);
+                        $sheet->cell('K'.$i, $value['paid_amount']);
+                        $sheet->cell('L'.$i, $value['payable_amount']);
+
+                    }
+                }
+
+                //$sheet->fromArray($data);
+
+
+            });
+        })->download($type);
+    }
+
 
 
 }

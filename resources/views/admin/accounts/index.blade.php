@@ -15,6 +15,7 @@
                         Accounts
                         <span class="pull-right">
                             <a href="{{ route('admin.accounts.create') }}" class="btn btn-xs btn-primary">Add</a>
+                            <a href="{{ route('admin.account.export','xls') }}" class="btn btn-xs btn-primary">Export</a>
                         </span>
                     </div>
                     <!-- /.panel-heading -->

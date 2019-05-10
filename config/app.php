@@ -180,6 +180,7 @@ return [
         Dawson\Youtube\YoutubeServiceProvider::class,
         Elasticquent\ElasticquentServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class
 
     ],
 
@@ -233,6 +234,7 @@ return [
         'Youtube' => Dawson\Youtube\Facades\Youtube::class,
         'Es' => Elasticquent\ElasticquentElasticsearchFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

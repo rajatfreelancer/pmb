@@ -40,6 +40,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::get('accounts', 'AccountController@accounts')->name('accounts');
         Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
         Route::get('print_passbook/{id}', 'AccountController@printPassbook')->name('print.passbook');
+        Route::get('account_export/{type}', 'AccountController@export')->name('account.export');
 
         /*Route::get('/local', 'DashboardController@localBackup')->name('local.backup');*/
         Route::get('/local', 'DashboardController@runBackup')->name('local.backup');

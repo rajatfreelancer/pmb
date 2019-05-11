@@ -31,7 +31,7 @@ class Account extends Model
         'paid_amount'    
     ];
 
-    public function getMaturityAmountAttribute()
+    /*public function getMaturityAmountAttribute()
     {
         if($this->account_type == self::TYPE_DD) {
             $interest_amt = $this->denomination_amount;
@@ -40,14 +40,15 @@ class Account extends Model
             for($i = 1; $i <= $days; $i++) {                
                 $interest_amt = $interest_amt + (int) ($interest_amt * $this->interest_rate/100);
                 
-            }*/
+            }
             $years = round($this->duration/12);
-            $interest_amt = self::interest($this->payable_amount, $years, $this->interest_rate, $days);            
+            $n = 1;
+            $interest_amt = self::interest($this->denomination_amount, $years, $this->interest_rate, $n);            
             return round($interest_amt); 
         }
 
         return ($this->payable_amount + $this->payable_amount * $this->interest_rate/100);        
-    }
+    }*/
 
     public static function interest($investment,$year,$rate=15,$n=1){
         $accumulated=0;
@@ -123,17 +124,18 @@ class Account extends Model
         $this->create_user_id = \Auth::guard('admins')->user()->id;
         $this->user_id = $request->user_id;
         $this->policy_date = $request->policy_date;
-        $this->maturity_date = date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
-        $this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
+        $this->maturity_date = $request->maturity_date ? $request->maturity_date : date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
+        $this->maturity_amount = $request->maturity_amount;
+        //$this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
         
-        if($this->account_type == self::TYPE_DD) {
+       /* if($this->account_type == self::TYPE_DD) {
             $interest_amt = $this->denomination_amount;
             $days = $this->getDays($this->policy_date, $this->maturity_date);
             for($i = 1; $i <= $days; $i++) {
                 $interest_amt = $interest_amt + $interest_amt * $this->interest_rate/100;
             }
             $this->maturity_amount = $interest_amt; 
-        }        
+        }*/        
         $this->status = Account::STATUS_ACTIVE;
     }
 

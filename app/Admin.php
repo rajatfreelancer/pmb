@@ -87,5 +87,36 @@ class Admin extends Authenticatable
     {
         return "SCO 88 2ND F SECTOR 0C CHANDIGARH 160036--SMB001";
     }
+
+    public function rules()
+    {
+        $array = [
+            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'number' => 'numeric|min:11',
+            'father_spouse' => 'required|string',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+        ];
+
+        return $array;
+    }
+
+    public function setData($data)
+    {
+        $this->name = $data->get('name');
+        $this->last_name = $data->get('last_name');
+        $this->number = $data->get('number');
+        $this->email = $data->get('email');
+        $this->father_spouse = $data->get('father_spouse');
+        $this->address = $data->get('address');
+        $this->city = $data->get('city');
+        $this->state = $data->get('state');
+        $this->country = $data->get('country');
+        $this->role = $data->get('role');
+        //$this->create_user_id = \Auth::guard('admins')->user()->id;
+    }
     
 }

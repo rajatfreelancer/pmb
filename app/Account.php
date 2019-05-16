@@ -62,7 +62,12 @@ class Account extends Model
 
     public function getInstallmentNumberAttribute()
     {
-        $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
+        if ($this->account_type == self::TYPE_DD) {
+            $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
+        }else{
+            $no_of_inst = $this->duration;
+        }
+        
         return $no_of_inst > 0 ? $no_of_inst : 0;
     }
 

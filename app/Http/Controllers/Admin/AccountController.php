@@ -114,6 +114,9 @@ class AccountController extends Controller
             ->addColumn('applicant_name', function ($row) {
                 return $row->user->name.' '.$row->user->last_name;
             })
+            ->addColumn('create_user_name', function($row){
+            return $row->createUser->name;
+        })
             ->addColumn("policy_date", function ($row) {
                 return date("Y-m-d", strtotime($row->policy_date));
             })
@@ -183,6 +186,9 @@ class AccountController extends Controller
             ->addColumn('applicant_name', function ($row) {
                 return $row->user->name.' '.$row->user->last_name;
             })
+            ->addColumn('create_user_name', function($row){
+            return $row->createUser->name;
+        })
             ->addColumn("policy_date", function ($row) {
                 return date("Y-m-d", strtotime($row->policy_date));
             })
@@ -222,6 +228,9 @@ class AccountController extends Controller
             ->addColumn("policy_date", function ($row) {
                 return date("Y-m-d", strtotime($row->policy_date));
             })
+            ->addColumn('create_user_name', function($row){
+            return $row->createUser->name;
+        })
             ->addColumn("policy_code", function ($row) {
                 return $row->ori_account_number;
             })

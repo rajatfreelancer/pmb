@@ -13,6 +13,7 @@ class Admin extends Authenticatable
 
     const DD_PREFIX = 'DD';
     const RD_PREFIX = 'RD';
+    const SAVINGS_PREFIX = 'SV';
     const FD_PREFIX = 'FD';
     const MN_PREFIX = 'MN';
     const LN_PREFIX = 'LN';
@@ -42,6 +43,7 @@ class Admin extends Authenticatable
             Account::TYPE_DD => self::DD_PREFIX,
             Account::TYPE_RD => self::RD_PREFIX,
             Account::TYPE_FD => self::FD_PREFIX,
+            Account::TYPE_SAVINGS => self::SAVINGS_PREFIX,
             Account::TYPE_MONTHLY_INCOME => self::MN_PREFIX,
             Account::TYPE_LOAN => self::LN_PREFIX,
         ];

@@ -22,7 +22,7 @@
                     <div class="panel-body">
                         <div class="table-responsive">
                              <div class="form-group">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label>Member Id</label>
                                 <select title="None Selected" name="create_user_id" id="create_user_id" class="form-control" data-column="{{ $type == '' ? 13 : 0 }}">
                                     <option value="">Select Staff</option>
@@ -30,6 +30,14 @@
                                         <option value="{{ $admin->id }}">{{ $admin->name }}</option>
                                     @endforeach
                                 </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Start Date</label><br>
+                               <input type="text" name="start_date" id="start_date" class="form-control datepicker">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>End Date</label><br>
+                                <input type="text" name="end_date" id="end_date" class="datepicker form-control">
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -72,14 +80,14 @@
                         </table>
                         <!-- /.table-responsive -->
                         </div>
-                        @if($type == "")
+                        <!-- @if($type == "")
                         <div class="data_table_balance">
                 <p>
                     <span class="d_table_label"> Paid Amount: </span>
                     <span class="d_table_amount">Rs.</span><span class="d_table_amount" id="amount_paid"></span>
                 </p>
             </div>
-                        @endif
+                        @endif -->
                     </div>
                     <!-- /.panel-body -->
                 </div>
@@ -201,11 +209,21 @@
                 drawCallback:function() {
                     if(type == ""){
                     var total = this.api().columns(11).data().reduce(function (a, b){
+                        var a = parseInt(a);
+                        var b = parseInt(b);
                         return eval(a) + eval(b);
                     }, 0);
                     $("#amount_paid").html(total);
                     }
                 }
+            });
+            $(".datepicker").datepicker({format:"yyyy-mm-dd"});
+
+            $(".datepicker").change(function(){
+                var start_date = $("#start_date").val();
+                var end_date = $("#end_date").val();
+                var v = start_date+'&'+end_date;
+                list_table_tab.columns(1).search(v, true, false).draw();
             });
 
             $("#create_user_id").change(function(){

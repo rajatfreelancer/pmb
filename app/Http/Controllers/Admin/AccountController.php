@@ -39,6 +39,12 @@ class AccountController extends Controller
         ->filterColumn('create_user_name', function($query, $keyword){
             $query->where('create_user_id', $keyword);
         })
+        ->filterColumn('policy_date', function($query, $keyword){
+            $date = explode('&', $keyword);
+            $start_date = date("Y-m-d", strtotime($date[0]));
+            $end_date = date("Y-m-d", strtotime($date[1]));
+            $query->whereBetween('policy_date', [$start_date, $end_date]);
+        })
         ->addColumn('create_user_name', function($row){
             return $row->createUser->name;
         })

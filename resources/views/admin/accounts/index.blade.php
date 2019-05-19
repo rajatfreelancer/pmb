@@ -21,6 +21,7 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="table-responsive">
+                        @if($type == "")
                              <div class="form-group">
                                 <div class="col-md-4">
                                     <label>Member Id</label>
@@ -42,6 +43,7 @@
                             </div>
                             <div class="clearfix"></div>
                             <br>
+                            @endif
                         <table width="100%" class="table table-striped table-bordered table-hover dataTables-example" id="list_table">
                             <thead>
                             <tr>

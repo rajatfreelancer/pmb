@@ -72,6 +72,14 @@
                         </table>
                         <!-- /.table-responsive -->
                         </div>
+                        @if($type == "")
+                        <div class="data_table_balance">
+                <p>
+                    <span class="d_table_label"> Paid Amount: </span>
+                    <span class="d_table_amount">Rs.</span><span class="d_table_amount" id="amount_paid"></span>
+                </p>
+            </div>
+                        @endif
                     </div>
                     <!-- /.panel-body -->
                 </div>
@@ -189,7 +197,15 @@
                 serverSide: true,
                 ajax: tu,
                 columns: cols,
-                order: order
+                order: order,
+                drawCallback:function() {
+                    if(type == ""){
+                    var total = this.api().columns(11).data().reduce(function (a, b){
+                        return eval(a) + eval(b);
+                    }, 0);
+                    $("#amount_paid").html(total);
+                    }
+                }
             });
 
             $("#create_user_id").change(function(){

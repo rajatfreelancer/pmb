@@ -25,7 +25,7 @@
 </head>
 <body class="print_setting">
 
-<div class="container" style="line-height: 1.1; margin: 315px 5px 5px 5px;height: 304px;width: 100%;">
+<div class="container" style="line-height: 1.3; margin: 380px 5px 5px 5px;height: 304px;width: 100%;">
     <div class="row">
         <div>
             <p> <a id="print" class="btn btn-primary ui button blue">Print</a>
@@ -87,7 +87,7 @@
             </div>
         </div>
         <div class="col-md-3">
-        <div class="picture_div" style="height:200px; border:1px solid #000;">
+        <div class="picture_div" style="height:200px; border:1px solid #000;width: 150px">
             @if(!empty($account->user->profile_pic))
                 <img width="50%" height="150px" src="{{ asset('uploads') }}/{{ $account->user->profile_pic }}">
             @endif

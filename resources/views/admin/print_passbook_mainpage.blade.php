@@ -13,6 +13,7 @@
 
         @media print {
             .page-break	{ display: block; page-break-before: always; }
+            .print_setting { display: block; page-break-before: always; }
            /* .print_setting{-webkit-transform: rotate(-90deg) scale(.68,.68);
                 -moz-transform:rotate(-90deg) scale(.58,.58);
                 zoom: 200%;size: landscape;}*/
@@ -24,7 +25,7 @@
 </head>
 <body class="print_setting">
 
-<div class="container" style="line-height: 1.1; margin: 5px 5px 5px 5px;height: 304px;width: 100%;">
+<div class="container" style="line-height: 1.1; margin: 304px 5px 5px 5px;height: 304px;width: 100%;">
     <div class="row">
         <div>
             <p> <a id="print" class="btn btn-primary ui button blue">Print</a>

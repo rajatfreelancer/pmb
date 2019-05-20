@@ -13,14 +13,18 @@
 
         @media print {
             .page-break	{ display: block; page-break-before: always; }
+           /* .print_setting{-webkit-transform: rotate(-90deg) scale(.68,.68);
+                -moz-transform:rotate(-90deg) scale(.58,.58);
+                zoom: 200%;size: landscape;}*/
+
         }
     </style>
 
     <title>PassBook</title>
 </head>
-<body>
+<body class="print_setting">
 
-<div class="container" style="margin-top: 150px">
+<div class="container" style="line-height: 1.1; margin: 5px 5px 5px 5px;height: 304px;width: 100%;">
     <div class="row">
         <div>
             <p> <a id="print" class="btn btn-primary ui button blue">Print</a>
@@ -98,7 +102,7 @@
 </div>
 
 
-<div class="container page-break">
+{{--<div class="container page-break">
     <table class="table">
         <thead>
         <tr>
@@ -128,7 +132,7 @@
         @endif
         </tbody>
     </table>
-</div>
+</div>--}}
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

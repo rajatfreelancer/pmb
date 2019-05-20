@@ -38,6 +38,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::resource('accounts', 'AccountController');
         Route::get('get-users-list', 'AccountController@getUsersList')->name('get.users.list');
         Route::get('accounts', 'AccountController@accounts')->name('accounts');
+
+        Route::get('accounts-fd', 'AccountController@accountsFd')->name('accounts.fd');
+        Route::get('ajax-get-data-fd', 'AccountController@getDataFD')->name('ajax.get.data.fd');
+        Route::get('accounts-savings', 'AccountController@accountsSavings')->name('accounts.savings');
+        Route::get('ajax-get-data-savings', 'AccountController@getDataSavings')->name('ajax.get.data.savings');
+        Route::get('accounts-mis', 'AccountController@accountsMis')->name('accounts.mis');
+        Route::get('ajax-get-data-mis', 'AccountController@getDataMis')->name('ajax.get.data.mis');
+        Route::get('accounts-mature/{id}', 'AccountController@mature')->name('accounts.mature');
+        Route::post('accounts-mature/{id}/store', 'AccountController@matureStore')->name('accounts.mature.store');
+
         Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
         Route::get('print_passbook/{id}', 'AccountController@printPassbook')->name('print.passbook');
         Route::get('account_export/{type}', 'AccountController@export')->name('account.export');

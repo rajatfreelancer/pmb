@@ -7,8 +7,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-center p-md">
-
-                        <h2><span class="text-navy"> WELCOME TO BASE PROJECT </span> </h2>
+                        <img src="{{ asset('img/logo.jpeg')}}" width=200 />
                     </div>
                 </div>
             </div>

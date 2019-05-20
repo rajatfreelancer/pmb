@@ -9,9 +9,10 @@ class Account extends Model
     //
     const TYPE_DD = 1;
     const TYPE_RD = 2;
-    const TYPE_FD = 3;
+    const TYPE_FD = 3;    
     const TYPE_MONTHLY_INCOME = 4;
     const TYPE_LOAN = 5;
+    const TYPE_SAVINGS = 6;
 
     const STATUS_ACTIVE = 1;
     const STATUS_CLOSED = 2;
@@ -50,7 +51,8 @@ class Account extends Model
         return ($this->payable_amount + $this->payable_amount * $this->interest_rate/100);        
     }*/
 
-    public static function interest($investment,$year,$rate=15,$n=1){
+    public static function interest($investment,$year,$rate=15,$n=1)
+    {
         $accumulated=0;
         if ($year > 1){
                 $accumulated=self::interest($investment,$year-1,$rate,$n);
@@ -62,13 +64,21 @@ class Account extends Model
 
     public function getInstallmentNumberAttribute()
     {
-        $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
+        if ($this->account_type == self::TYPE_DD) {
+            $no_of_inst = $this->getDays($this->policy_date, date("Y-m-d"));
+        }else{
+            $no_of_inst = $this->getMonths($this->policy_date, date("Y-m-d"));            
+        }
+        
         return $no_of_inst > 0 ? $no_of_inst : 0;
     }
 
     public function getPaidInstallmentAttribute()
     {
-        return $this->transactions->sum('amount')/$this->denomination_amount;
+        if($this->account_type != self::TYPE_SAVINGS) {
+            return $this->transactions->sum('amount')/$this->denomination_amount;
+        }
+        return 0;
     }
 
     public function getPaidAmountAttribute()
@@ -183,14 +193,54 @@ class Account extends Model
         return $account_no;
     }
 
+    public static function getStatusOptions($id = null)
+    {
+        $list = [
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_CLOSED => 'Closed',
+        ];
+
+        if ($id === null) {
+            return $list;        
+        }
+
+        if(isset($list[$id])) {
+            return $list[$id];
+        }
+
+        return $id;
+    }
+
     public static function getTypeOptions($id = null)
     {
         $list = [
             self::TYPE_DD => 'Daily Deposit',
             self::TYPE_RD => 'Reccurring Deposit',
             self::TYPE_FD => 'Fixed Deposit',
+            self::TYPE_SAVINGS => 'Savings',
             //self::TYPE_MONTHLY_INCOME => 'Monthly Income Scheme',
            // self::TYPE_LOAN => 'Loan Scheme',
+        ];
+
+        if ($id === null) {
+            return $list;        
+        }
+
+        if(isset($list[$id])) {
+            return $list[$id];
+        }
+
+        return $id;
+    }
+
+    public static function getAccountTypeModeOptions($id = null)
+    {
+        $list = [
+            self::TYPE_DD => 'Dly',
+            self::TYPE_RD => 'Mly',
+            self::TYPE_FD => 'Fd',
+            self::TYPE_MONTHLY_INCOME => 'Mly',
+            self::TYPE_LOAN => 'Mly',
         ];
 
         if ($id === null) {
@@ -284,6 +334,23 @@ class Account extends Model
         $diff_in_days = $to->diffInDays($from);
 
         return $diff_in_days - 1;
+    }
+
+    public static function getMonths($from, $to)
+    {
+        $to = \Carbon\Carbon::createFromFormat('Y-m-d', $to);
+
+        $from = \Carbon\Carbon::createFromFormat('Y-m-d', $from);
+
+        $diff_in_days = $to->diffInMonths($from);
+
+        return $diff_in_days;
+    }
+    
+    public function savingsAccounts()
+    {
+        $accounts = Account::where("user_id", $this->user_id)->where('status', Account::STATUS_ACTIVE)->where('account_type', Account::TYPE_SAVINGS)->get();
+        return $accounts;
     }
 
 }

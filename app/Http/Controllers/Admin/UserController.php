@@ -74,7 +74,7 @@ class UserController extends Controller
 
             $model->save();
             \DB::commit();
-            return redirect()->route('admin.user.index')->with('success', 'User is successfully added.');
+            return redirect()->route('admin.user.index')->with('success', 'Customer is successfully added.');
         /*} catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());
         }*/
@@ -139,7 +139,7 @@ class UserController extends Controller
                 $model->profile_pic = $image;
             }
             $model->save();
-            return redirect()->route('admin.user.index')->with('success', 'User is successfully updated.');
+            return redirect()->route('admin.user.index')->with('success', 'Customer is successfully updated.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());
         }
@@ -156,7 +156,7 @@ class UserController extends Controller
         try {
             $user = User::find($id);
             $user->delete();
-            return redirect()->route('admin.user.index')->with('success', 'User has been deleted successfully.');
+            return redirect()->route('admin.user.index')->with('success', 'Customer has been deleted successfully.');
         } catch (\Excetion $e) {
             return redirect()->back()->with('error', 'Some Erros Found:- ' . $e->getMessage());
         }

@@ -13,19 +13,17 @@
 
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Add Account</h5>
+                        <h5>Mature Account</h5>
                     </div>
                     <div class="ibox-content">
-                        <form method="post" class="form-horizontal" action="{{ route('admin.accounts.store') }}"  enctype="Multipart/form-data">
+                        <form method="post" class="form-horizontal" action="{{ route('admin.accounts.mature.store', $account->id) }}"  enctype="Multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Member Id*</label>
                                 </div>
                                 <div class="col-md-6">
-                                <select title="None Selected" name="user_id" id="users_select2" class="form-control users_select2" required>
-                                    <option value="{{ $user->id }}" selected="selected">{{ $user->text }}</option>
-                                </select>
+                                <span class="form-control">{{ $account->user->name.' '.$account->user->last_name }}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -33,12 +31,7 @@
                                     <label class="control-label">Account Type</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <select name="account_type" id="account_type" class="form-control">
-                                    <option value="">Select Account Type</option>
-                                    @foreach(App\Account::getTypeOptions() as $type => $value) 
-                                    <option value="{{ $type }}">{{ $value }}</option>
-                                    @endforeach
-                                    </select>
+                                    <span class="form-control">{{ $account->getTypeOptions($account->account_type) }}</span>
                                 </div>
                             </div>
                             <div class="form-group" id="duration_div">
@@ -46,15 +39,25 @@
                                     <label class="control-label">Duration(in Months)</label>
                                 </div>
                                 <div class="col-md-6">
-                                <input type="text" class="form-control" name="duration" id="duration"/> 
+                                     <span class="form-control">{{ $account->duration }}</span>
                                 </div>
                             </div>
+
                             <div class="form-group" id="duration_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Policy Date</label>
                                 </div>
                                 <div class="col-md-6">
-                                <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="policy_date" id="policy_date" /> 
+                                     <span class="form-control">{{ $account->policy_date }}</span>
+                                 </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="control-label">Interest Rate (in %)</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="form-control">{{ $account->interest_rate }}</span>
                                 </div>
                             </div>
 
@@ -63,103 +66,65 @@
                                     <label class="control-label">Maturity Amount</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" name="maturity_amount"/>
+                                     <span class="form-control">{{ $account->maturity_amount }}</span>
                                 </div>
                             </div>
+                            
                             <div class="form-group" id="duration_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Maturity Date</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="maturity_date" id="maturity_date" />
+                                    <span class="form-control">{{ $account->maturity_date }}</span>
+                                </div>
+                            </div>
+                             <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Actual Maturity Amount</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="actual_maturity_amount"/>
+                                </div>
+                            </div>
+                             <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Actual Maturity Date</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control datepicker" name="actual_maturity_date"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="duration_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Actual Interest Rate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="actual_interest_rate"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">Denomination Amount</label>
+                                    <label class="control-label">Transfer to Account</label>
                                 </div>
                                 <div class="col-md-6">
-                                   <input type="text" class="form-control" name="denomination_amount"/>
+                                <select title="None Selected" name="transfer_to" id="transfer_to" class="form-control transfer_to">
+                                    @foreach($account->savingsAccounts() as $saving)
+                                    <option value="{{ $saving->id }}">{{ $saving->account_number }} </option>
+                                    @endforeach
+                                </select>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">Interest Rate (in %)</label>
+                                    <label class="control-label">Remarks</label>
                                 </div>
                                 <div class="col-md-6">
-                                   <input type="text" class="form-control" name="interest_rate"/>
+                                    <input type="text" name="remarks" class="form-control" />
                                 </div>
                             </div>
-                           
-                           <div class="form-group">
-                                <div class="col-md-3">
-                                    <label class="control-label">First Nominee Name</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" name="nominee_name"
-                                           value="">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <label class="control-label">First Nominee Relation</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" name="nominee_relation"
-                                           value="">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <label class="control-label">First Nominee Share (in %)</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" name="nominee_share"
-                                           value="100" max="100" id="first_nominee_share">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" id="add_second_nominee">Add Second Nominee</button>
-                            <div id="second_nominee_div" style="display:none;">
-                                <div class="form-group">
-                                    <div class="col-md-3">
-                                        <label class="control-label">Second Nominee Name</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="second_nominee_name"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-3">
-                                        <label class="control-label">Second Nominee Relation</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="second_nominee_relation"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-3">
-                                        <label class="control-label">Second Nominee Share</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="second_nominee_share"
-                                            value="" id="second_nominee_share">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <label class="control-label">Attach Documents</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="file" name="documents" multiple>
-                                </div>
-                            </div>
-
                             <button class="btn btn-primary" type="submit">Save</button>
                         </form>
                     </div>

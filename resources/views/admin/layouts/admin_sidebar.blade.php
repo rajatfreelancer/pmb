@@ -32,7 +32,9 @@
             <li><a href="{{ route('admin.staff.index') }}">Staff</a></li>
             <!--li><a href="{{ route('admin.local.backup') }}">DB BackUp</a></li>
             <li><a href="{{ route('admin.txt.send.sms') }}">Send Sms</a></li-->
-            <li><a href="{{ route('admin.accounts') }}">Accounts</a></li>
+            <li><a href="{{ route('admin.accounts') }}">RD/DD Accounts</a></li>
+            <li><a href="{{ route('admin.accounts.fd') }}">FD Accounts</a></li>
+            <li><a href="{{ route('admin.accounts.savings') }}">Savings Accounts</a></li>
         </ul>
 
     </div>

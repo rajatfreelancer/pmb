@@ -85,7 +85,7 @@ class Admin extends Authenticatable
 
     public static function getAddress()
     {
-        return "SCO 88 2ND F SECTOR 0C CHANDIGARH 160036--SMB001";
+        return "Plot No. 144 Sector 39 west, Chandigarh - 160036 -- PMB001";
     }
     
 }

@@ -13,14 +13,19 @@
 
         @media print {
             .page-break	{ display: block; page-break-before: always; }
+            .print_setting { display: block; page-break-before: always; }
+           /* .print_setting{-webkit-transform: rotate(-90deg) scale(.68,.68);
+                -moz-transform:rotate(-90deg) scale(.58,.58);
+                zoom: 200%;size: landscape;}*/
+
         }
     </style>
 
     <title>PassBook</title>
 </head>
-<body>
+<body class="print_setting">
 
-<div class="container" style="margin-top: 150px">
+<div class="container" style="line-height: 1.3; margin: 380px 5px 5px 5px;height: 304px;width: 100%;">
     <div class="row">
         <div>
             <p> <a id="print" class="btn btn-primary ui button blue">Print</a>
@@ -82,7 +87,7 @@
             </div>
         </div>
         <div class="col-md-3">
-        <div class="picture_div" style="height:200px; border:1px solid #000;">
+        <div class="picture_div" style="height:200px; border:1px solid #000;width: 150px">
             @if(!empty($account->user->profile_pic))
                 <img width="50%" height="150px" src="{{ asset('uploads') }}/{{ $account->user->profile_pic }}">
             @endif
@@ -98,7 +103,7 @@
 </div>
 
 
-<div class="container page-break">
+{{--<div class="container page-break">
     <table class="table">
         <thead>
         <tr>
@@ -128,7 +133,7 @@
         @endif
         </tbody>
     </table>
-</div>
+</div>--}}
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

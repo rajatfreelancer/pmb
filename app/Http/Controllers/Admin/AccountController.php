@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use Illuminate\Http\Request;
 use App\Account;
+use App\Admin;
 use App\AccountTransaction;
 use App\Http\Models\SystemFile;
 
@@ -300,7 +301,7 @@ class AccountController extends Controller
                     $transaction = new AccountTransaction();
                     $transaction->amount = $account->actual_maturity_amount;
                     $transaction->account_id = $account->id;
-                    $transaction->method = self::MEDTHOD_CREDIT; 
+                    $transaction->method = self::METHOD_CREDIT; 
                     $transaction->paid_date = $account->actual_maturity_date;                    
                     $transaction->create_user_id = Auth::guard('admins')->user()->id;
                     $transaction->save();
@@ -473,13 +474,29 @@ class AccountController extends Controller
             'data' => $denomination];
     }
 
-    public function getUsersList(Request $request)
+    public function getUsersList(Request $request, $id = null)
     {
         $users = User::select('users.id','users.prefix', 'users.member_id')
-                        ->where('member_id', 'LIKE', '%' . $request->q . '%')
-                        ->get()->toArray();
+                        ->where('member_id', 'LIKE', '%' . $request->q . '%');
 
+        if ($id != null) {
+           // $users = $users->where('create_user_id', $id);
+            ;
+        }
+
+        $users = $users->get();
+
+        if ($request->q) {
+            $users = $users->where('text', $request->q);
+        }
+        $users = $users->toArray();
         return response()->json(['data' => $users, 'status' => 200]);        
+    }
+
+    public function getAdminsList()
+    {
+        $admins = Admin::get()->toArray();
+        return response()->json(['data' => $admins, 'status' => 200]);   
     }
 
     public function accounts()
@@ -495,8 +512,9 @@ class AccountController extends Controller
         return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 
-    public function export($type)
+    public function export(Request $request, $type = null)
     {
+        //echo "<pre>";print_r($request->all());exit;
 
         $data = Account::with('user', 'createUser');
 
@@ -505,6 +523,18 @@ class AccountController extends Controller
         }else{
             $data = $data->whereIn('account_type', [Account::TYPE_RD, Account::TYPE_DD]);
         }
+
+        if ($request->create_user_id) {
+            $data = $data->where('create_user_id', $request->create_user_id);
+        }
+
+        if ($request->start_date && $request->end_date) {
+            $data = $data->whereBetween('policy_date', [$request->start_date, $request->end_date]);
+        }elseif ($request->start_date && !$request->end_date) {
+            $data = $data->whereBetween('policy_date', [$request->start_date, date("Y-m-d H:i:s")]);
+        }elseif (!$request->start_date && $request->end_date) {
+            $data = $data->whereBetween('policy_date', [date("Y-m-d H:i:s"), $request->end_date]);
+        } 
 
         $data = $data->get()->toArray();
         if ($type == "") {

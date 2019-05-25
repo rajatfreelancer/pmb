@@ -15,16 +15,19 @@
                         Accounts
                         <span class="pull-right">
                             <a href="{{ route('admin.accounts.create') }}" class="btn btn-xs btn-primary">Add</a>
-                            <a href="{{ route('admin.account.export', $type) }}" class="btn btn-xs btn-primary">Export</a>
+                            <a href="{{ route('admin.transactions.export', $type) }}" onclick="event.preventDefault();
+                                                     document.getElementById('export-form').submit();"class="btn btn-xs btn-primary">Export</a>
                         </span>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="table-responsive">
                         @if($type == "")
+                        <form method="POST" action="{{ route('admin.transactions.export.post', $type) }}" id="export-form">
+                            @csrf()
                              <div class="form-group">
                                 <div class="col-md-4">
-                                    <label>Member Id</label>
+                                    <label>Staff Id</label>
                                 <select title="None Selected" name="create_user_id" id="create_user_id" class="form-control" data-column="{{ $type == '' ? 13 : 0 }}">
                                     <option value="">Select Staff</option>
                                     @foreach(App\Admin::all() as $admin)
@@ -41,6 +44,7 @@
                                 <input type="text" name="end_date" id="end_date" class="datepicker form-control">
                                 </div>
                             </div>
+                        </form>
                             <div class="clearfix"></div>
                             <br>
                             @endif

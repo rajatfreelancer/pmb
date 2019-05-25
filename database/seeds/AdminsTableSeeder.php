@@ -30,5 +30,26 @@ class AdminsTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('admins')->insert($insert_array);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
+        $r_keys = [
+             'name', 
+             'guard_name',
+        ];
+
+
+        $r_values = [
+            ['Admin', 'admins'],
+            ['Staff', 'admins'],
+        ];
+
+        $r_insert_array = [];
+        foreach ($r_values as $r_value) {
+            $insert_array[] = array_combine($r_keys, $r_value);
+        }
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('roles')->insert($r_insert_array);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+
     }
 }

@@ -36,7 +36,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::get('home', 'DashboardController@index')->name('dashboard');
         Route::resource('user', 'UserController');
         Route::resource('accounts', 'AccountController');
-        Route::get('get-users-list', 'AccountController@getUsersList')->name('get.users.list');
+        
+        Route::get('get-admins-list/{id?}', 'AccountController@getAdminsList')->name('get.admins.list');
+        Route::get('get-users-list/{id?}', 'AccountController@getUsersList')->name('get.users.list');
         Route::get('accounts', 'AccountController@accounts')->name('accounts');
 
         Route::get('accounts-fd', 'AccountController@accountsFd')->name('accounts.fd');
@@ -50,7 +52,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
         Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
         Route::get('print_passbook/{id}', 'AccountController@printPassbook')->name('print.passbook');
-        Route::get('account_export/{type}', 'AccountController@export')->name('account.export');
+        Route::get('account_export/{type?}', 'AccountController@export')->name('account.export');
+        Route::post('account_export/{type?}', 'AccountController@export')->name('account.export.post');
+         Route::get('transactions_export/{type?}', 'TransactionController@export')->name('transactions.export');
+        Route::post('transactions_export/{type?}', 'TransactionController@export')->name('transactions.export.post');
 
         /*Route::get('/local', 'DashboardController@localBackup')->name('local.backup');*/
         Route::get('/local', 'DashboardController@runBackup')->name('local.backup');
@@ -63,10 +68,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::post('/send_sms', 'DashboardController@sendSms')->name('send.sms');
 
         Route::resource('transactions', 'TransactionController');
-
-
-
-
+        
+        Route::get('/transactions-data', 'TransactionController@getData')->name('transactions.ajax.get.data');
+        Route::get('/get-accounts-list/{id?}', 'TransactionController@getAccountList')->name('get.accounts.list');
         
     });
 

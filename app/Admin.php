@@ -28,6 +28,9 @@ class Admin extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $appends = [
+        'text'
+    ];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -36,6 +39,11 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getTextAttribute()
+    {
+        return $this->name;
+    }
 
     public static function getTygetPrefixpeOptions($id = null)
     {

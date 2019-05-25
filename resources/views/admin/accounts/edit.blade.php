@@ -13,19 +13,22 @@
 
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Add User</h5>
+                        <h5>{{ @$title }}</h5>
                     </div>
                     <div class="ibox-content">
-                        <form method="post" class="form-horizontal" action="{{ route('admin.accounts.store') }}"  enctype="Multipart/form-data">
+                        <form method="post" class="form-horizontal" action="{{ route('admin.accounts.update', $account->id) }}"  enctype="Multipart/form-data">
                             {{ csrf_field() }}
+                            {{ method_field('PUT') }}
                             <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Member Id*</label>
                                 </div>
                                 <div class="col-md-6">
-                                <select title="None Selected" name="user_id" id="users_select2" class="form-control users_select2" required>
-                                    <option value="{{ $user->id }}" selected="selected">{{ $user->text }}</option>
+                                    <input type="hidden" name="user_id" value="{{ $account->user_id }}">
+                                <select title="None Selected" name="user_id" id="users_select2" class="form-control users_select2" required disabled>
+                                    <option value="{{ $account->user_id }}" selected="selected">{{ $account->user->text }}</option>
                                 </select>
+
                                 </div>
                             </div>
                             <div class="form-group">
@@ -33,10 +36,11 @@
                                     <label class="control-label">Account Type</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <select name="account_type" id="account_type" class="form-control">
+                                    <input type="hidden" name="account_type" value="{{ $account->account_type }}">
+                                    <select name="account_type" id="account_type" class="form-control" disabled>
                                     <option value="">Select Account Type</option>
                                     @foreach(App\Account::getTypeOptions() as $type => $value) 
-                                    <option value="{{ $type }}">{{ $value }}</option>
+                                    <option value="{{ $type }}" @if($account->account_type == $type) selected @endif> {{ $value }}</option>
                                     @endforeach
                                     </select>
                                 </div>
@@ -46,7 +50,7 @@
                                     <label class="control-label">Duration(in Months)</label>
                                 </div>
                                 <div class="col-md-6">
-                                <input type="text" class="form-control" name="duration"/> 
+                                <input type="text" class="form-control" name="duration" value="{{ $account->duration }}"/>
                                 </div>
                             </div>
                             <div class="form-group" id="duration_div">
@@ -63,7 +67,7 @@
                                     <label class="control-label">Maturity Amount</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" name="maturity_amount"/>
+                                    <input type="text" class="form-control" name="maturity_amount" value="{{ $account->maturity_amount }}" />
                                 </div>
                             </div>
                             <div class="form-group" id="duration_div">
@@ -71,7 +75,7 @@
                                     <label class="control-label">Maturity Date</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="maturity_date" />
+                                    <input type="text" class="form-control datepicker2" value="{{ date('Y-m-d') }}" name="maturity_date"  />
                                 </div>
                             </div>
 
@@ -80,7 +84,7 @@
                                     <label class="control-label">Denomination Amount</label>
                                 </div>
                                 <div class="col-md-6">
-                                   <input type="text" class="form-control" name="denomination_amount"/>
+                                   <input type="text" class="form-control" name="denomination_amount" value="{{ $account->denomination_amount }}"/>
                                 </div>
                             </div>
 
@@ -89,7 +93,7 @@
                                     <label class="control-label">Interest Rate (in %)</label>
                                 </div>
                                 <div class="col-md-6">
-                                   <input type="text" class="form-control" name="interest_rate"/>
+                                   <input type="text" class="form-control" name="interest_rate" value="{{ $account->interest_rate }}"/>
                                 </div>
                             </div>
                            
@@ -99,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" name="nominee_name"
-                                           value="">
+                                           value="{{ $account->nominee_name }}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -108,7 +112,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" name="nominee_relation"
-                                           value="">
+                                           value="{{ $account->nominee_relation }}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -117,7 +121,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" name="nominee_share"
-                                           value="100" max="100" id="first_nominee_share">
+                                           value="{{ $account->nominee_share }}" max="100" id="first_nominee_share" >
                                 </div>
                             </div>
                             <button class="btn btn-primary" id="add_second_nominee">Add Second Nominee</button>
@@ -128,7 +132,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="second_nominee_name"
-                                            value="">
+                                               value="{{ $account->second_nominee_name }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -137,7 +141,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="second_nominee_relation"
-                                            value="">
+                                               value="{{ $account->second_nominee_relation }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -146,7 +150,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="second_nominee_share"
-                                            value="" id="second_nominee_share">
+                                               value="{{ $account->second_nominee_share }}" id="second_nominee_share">
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +182,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
 $(document).ready(function(){
-    $(".datepicker").datepicker({format:"yyyy-mm-dd"});
+    $(".datepicker").datepicker({format:"yyyy-mm-dd",setDate: '{{ $account->policy_date }}' });
+
+    $(".datepicker2").datepicker({format:"yyyy-mm-dd",setDate: '{{ $account->maturity_date }}' });
     $('.users_select2').select2({
         ajax: {
     url: "{{ url('admin/get-users-list') }}",

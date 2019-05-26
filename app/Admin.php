@@ -13,7 +13,7 @@ class Admin extends Authenticatable
 
     const DD_PREFIX = 'DD';
     const RD_PREFIX = 'RD';
-    const SAVINGS_PREFIX = 'SV';
+    const SAVINGS_PREFIX = 'SAV';
     const FD_PREFIX = 'FD';
     const MN_PREFIX = 'MN';
     const LN_PREFIX = 'LN';
@@ -89,7 +89,7 @@ class Admin extends Authenticatable
     $sender = urlencode($sender);
     $message = rawurlencode($message); 
     $numbers = implode(',', $numbers);
-    
+
  
     // Prepare data for POST request
         $data = array('apikey' => $apiKey, 'numbers' => $numbers, "sender" => $sender, "message" => $message); 

@@ -187,7 +187,7 @@ class TransactionController extends Controller
     public function getAccountList(Request $request, $id)
     {
 
-        $accounts = Account::where('user_id', $id)->where('status', Account::STATUS_ACTIVE)
+        $accounts = Account::with('user')->where('create_user_id', $id)->where('status', Account::STATUS_ACTIVE)
         ->get();        
         if ($request->q) {
             //$accounts = $accounts->where('text', $request->q);

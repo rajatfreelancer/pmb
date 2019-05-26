@@ -491,7 +491,7 @@ class AccountController extends Controller
 
     public function getUsersList(Request $request, $id = null)
     {
-        $users = User::select('users.id','users.prefix', 'users.member_id')
+        $users = User::select('users.id','users.prefix', 'users.member_id', 'users.name', 'users.last_name')
                         ->where('member_id', 'LIKE', '%' . $request->q . '%');
 
         if ($id != null) {

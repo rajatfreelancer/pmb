@@ -30,6 +30,15 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-3">
+                                    <label class="control-label">Member Name*</label>
+                                </div>
+                                <div class="col-md-6">
+                                <span id="member_name" class="member_name form-control"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-md-3">
                                     <label class="control-label">Account Type</label>
                                 </div>
                                 <div class="col-md-6">
@@ -192,7 +201,12 @@ $(document).ready(function(){
     // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
   }
     });
-
+    
+    $('.users_select2').on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data);
+        $("#member_name").html(data.name+' '+data.last_name);
+    });
     $("#add_second_nominee").click(function(e){
         e.preventDefault();
         $("#second_nominee_div").toggle();

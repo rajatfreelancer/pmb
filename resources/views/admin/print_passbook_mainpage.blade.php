@@ -58,16 +58,18 @@
                 <div class="col-sm-3"><b>BA ID</b></div>
                 <div class="col-sm-3">{{ $account->user->createUser->name }}</div>
             </div>
+            @if($account->account_type != App\Account::TYPE_SAVINGS)
             <div class="col-md-12 row">
-                <div class="col-md-3"><b>Installemnt Ammount</b></div>
+                <div class="col-md-3"><b>Installment Amount</b></div>
                 <div class="col-sm-9">{{ (!empty($account->denomination_amount)) ? $account->denomination_amount : '' }}</div>
             </div>
             <div class="col-md-12 row">
-                <div class="col-md-3"><b>Maturity Ammount.</b> </div>
+                <div class="col-md-3"><b>Maturity Amount.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->maturity_amount)) ? $account->maturity_amount : '' }} (On Regular A/C)</div>
                 <div class="col-sm-3"><b>CA ID</b></div>
                 <div class="col-sm-3">{{ $account->createUser->name }}</div>
             </div>
+            @endif
             <br>
             <div class="col-md-12 row">
                 <div class="col-md-3"><b>Date OF Issue.</b> </div>
@@ -78,8 +80,10 @@
             <div class="col-md-12 row">
                 <div class="col-md-3"><b>Nominee Name.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->nominee_name)) ? $account->nominee_name : '' }}</div>
+                @if($account->account_type != App\Account::TYPE_SAVINGS)
                 <div class="col-md-3"><b>Date OF Maturity.</b> </div>
                 <div class="col-sm-3">{{ (!empty($account->maturity_date)) ? $account->maturity_date : '' }}</div>
+                @endif
             </div>
             <div class="col-md-12 row">
                 <div class="col-md-3"><b>Branch Address</b></div>

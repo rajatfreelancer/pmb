@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                             @if(empty($id))                             
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Member Id*</label>
                                 </div>
@@ -43,7 +43,7 @@
                                 <select title="None Selected" name="user_id" id="users_select2" class="form-control users_select2" required>                                    
                                 </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group">
                                 <div class="col-md-3">
@@ -51,6 +51,16 @@
                                 </div>
                                 <div class="col-md-6">
                                 <select title="None Selected" name="account_id" id="accounts_select2" class="form-control accounts_select2" required>                                    
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="control-label">Member Name*</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="form-control" id="member_name"></span>
                                 </select>
                                 </div>
                             </div>
@@ -128,23 +138,7 @@ $(document).ready(function(){
 
     $('#create_user_id').on('select2:select', function (e) {
         var val = $(this).val();
-        $('.users_select2').select2({
-            ajax: {
-        url: "{{ url('admin/get-users-list') }}/"+val,
-        dataType: 'json',
-        processResults: function (data) {
-          // Tranforms the top-level key of the response object from 'items' to 'results'
-          return {
-            results: data.data
-          };
-        },
-        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-      }
-        });
-    });
-$('.users_select2').on('select2:select', function (e) {
-    var data = e.params.data;
-    console.log(data);
+        var data = e.params.data;    
         var val = data.id;
      $('.accounts_select2').select2({        
         ajax: {
@@ -152,6 +146,7 @@ $('.users_select2').on('select2:select', function (e) {
     dataType: 'json',
     processResults: function (data) {
       // Tranforms the top-level key of the response object from 'items' to 'results'
+
       return {
         results: data.data
       };
@@ -160,6 +155,11 @@ $('.users_select2').on('select2:select', function (e) {
   }
     });
      });
+
+    $('.accounts_select2').on('select2:select', function (e) {
+        var data = e.params.data;
+        $("#member_name").html(data.user.name+' '+data.user.last_name);
+    });
 })
 
 </script>

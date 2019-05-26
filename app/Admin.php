@@ -79,8 +79,21 @@ class Admin extends Authenticatable
         //$message = "This is a test message from the PHP API script.";
         // 612 chars or less
         // A single number or a comma-seperated list of numbers
-        $message = urlencode($message);
+        //$message = urlencode($message);
+
         $data = "username=".$username."&hash=".$hash."&message=".$message."&sender=".$sender."&numbers=".$numbers."&test=".$test;
+    $apiKey = urlencode($username);
+    
+    // Message details
+    $numbers = array($numbers);
+    $sender = urlencode($sender);
+    $message = rawurlencode($message); 
+    $numbers = implode(',', $numbers);
+    
+ 
+    // Prepare data for POST request
+        $data = array('apikey' => $apiKey, 'numbers' => $numbers, "sender" => $sender, "message" => $message); 
+
         $ch = curl_init('http://api.textlocal.in/send/?');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);

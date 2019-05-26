@@ -89,7 +89,7 @@ class AccountController extends Controller
                 return $row->payable_amount;
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -161,7 +161,7 @@ class AccountController extends Controller
                 if($row->status == Account::STATUS_CLOSED) {
                     return "No action";
                 }
-                return '<a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a>';
+                return '<a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -200,7 +200,7 @@ class AccountController extends Controller
                 return $row->getStatusOptions($row->status);
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Transaction</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Transaction</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions']);
 
@@ -266,7 +266,7 @@ class AccountController extends Controller
                 return $row->payable_amount;
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -410,11 +410,12 @@ class AccountController extends Controller
      */
     public function edit($id)
     {
-        $data['title'] = "Edit User";
-        $data['maintitle'] = "User";
-        $data['mainlink'] = "admin.user.index";
-        $data['user'] = User::find($id);
-        return view('admin.user.edit',$data);
+        $data['title'] = "Edit Account";
+        $data['maintitle'] = "Account";
+        $data['mainlink'] = "admin.accounts";
+        $data['account'] = Account::find($id);
+       // return $data;
+        return view('admin.accounts.edit',$data);
     }
 
     /**
@@ -426,21 +427,35 @@ class AccountController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $model = User::where('id', $id)->first();
-
+        //return $request->all();
+        $model = Account::find($id);
         $validator = \Validator::make($request->all(), $model->rules());
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator->errors());
         }
 
-        try {
-            $model->setData($request);
-            $model->save();
-            return redirect()->route('admin.user.index')->with('success', 'User is successfully updated.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());
+        \DB::beginTransaction();
+
+
+        $model = Account::find($id);
+        $model->setData($request);
+        $model->save();
+
+        if($request->documents) {
+            foreach($request->documents as $documents) {
+                SystemFile::saveUploadedFile($documents, $model, 'document');
+            }
         }
+
+        \DB::commit();
+        if ($model->account_type == Account::TYPE_FD) {
+            return redirect()->route('admin.accounts.fd')->with('success', 'Account is successfully updated.');
+        }
+        if ($model->account_type == Account::TYPE_SAVINGS) {
+            return redirect()->route('admin.accounts.savings')->with('success', 'Account is successfully updated.');
+        }
+        return redirect()->route('admin.accounts')->with('success', 'Account is successfully updated.');
     }
 
     /**

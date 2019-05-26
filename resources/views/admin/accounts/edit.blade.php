@@ -75,7 +75,7 @@
                                     <label class="control-label">Maturity Date</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control datepicker2" value="{{ date('Y-m-d') }}" name="maturity_date"  />
+                                    <input type="text" class="form-control datepicker2" value="{{ $account->maturity_date }}" name="maturity_date"  />
                                 </div>
                             </div>
 

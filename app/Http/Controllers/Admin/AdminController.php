@@ -119,12 +119,13 @@ class AdminController extends Controller
         }
 
         try {
-            $model->setData($request);
+            $model->setData($request);            
+            $model->save();
             if ($request->role) {
                 $role_r = Role::where('name', '=', $request->role)->firstOrFail();
-                \DB::table('model_has_roles')->where('model_id', $id)->update(['role_id'=>$role_r->id]);
+                $model->assignRole($role_r);
             }
-            $model->save();
+            
             return redirect()->route('admin.staff.index')->with('success', 'Staff is successfully updated.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());

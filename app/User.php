@@ -20,7 +20,7 @@ class User extends Authenticatable
      *
      */
     protected $fillable = [
-        'name', 'email', 'password','father_spouse', 'number','address','last_name','city','state','country', 'member_id'
+        'name', 'email', 'password','father_spouse', 'number','address','last_name','city','state','country', 'member_id', 'create_user_id'
     ];
 
     protected $appends = [

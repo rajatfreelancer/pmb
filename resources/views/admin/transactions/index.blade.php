@@ -12,31 +12,50 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {{ @$title }}
-                        Accounts
                         <span class="pull-right">
-                            <a href="{{ route('admin.accounts.create') }}" class="btn btn-xs btn-primary">Add</a>
+                            <a href="{{ route('admin.transactions.create') }}" class="btn btn-xs btn-primary">Add Installment</a>
+                            <a href="{{ route('admin.transactions.export') }}" onclick="event.preventDefault();
+                                                     document.getElementById('export-form').submit();"class="btn btn-xs btn-primary">Export</a>
                         </span>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
+                        <form method="POST" action="{{ route('admin.account.export.post') }}" id="export-form">
+                            @csrf()
+                             <div class="form-group">
+                                <div class="col-md-4">
+                                    <label>Member Id</label>
+                                <select title="None Selected" name="create_user_id" id="create_user_id" class="form-control" data-column="6">
+                                <option value="">Select Staff</option>
+                                    @foreach(App\Admin::all() as $admin)
+                                        <option value="{{ $admin->id }}">{{ $admin->name }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Start Date</label><br>
+                               <input type="text" name="start_date" id="start_date" class="form-control datepicker">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>End Date</label><br>
+                                <input type="text" name="end_date" id="end_date" class="datepicker form-control">
+                                </div>
+                            </div>
+                        </form>
+                            <div class="clearfix"></div>
+                            <br>
                         <div class="table-responsive">
                         <table width="100%" class="table table-striped table-bordered table-hover dataTables-example" id="list_table">
                             <thead>
                             <tr>
                                 <th>Applicant Name</th>
-                                <th>Policy Date</th>
-                                <th>Policy Code</th>
+                                <th>Member Id</th>
+                                <th>Account Code</th>
                                 <th>Amount</th>
-                                <th>Term</th>
-                                <th>Mode</th>                                
-                                <th>Due Date</th>
-                                <th>Inst No</th>
-                                <th>Paid Inst</th>
-                                <th>Unpaid Inst</th>
-                                <th>Paid Amount</th>                                
-                                <th>Req. Amount</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Created By</th>
                                 <th>Actions</th>
-                               {{-- <th>Contact No.</th>--}}
                             </tr>
                             </thead>
                            <tbody>
@@ -64,33 +83,28 @@
        var hidden_columns = true;
 
        $(function () {
-           var tu = "{{ route('admin.ajax.get.data') }}";
+           var tu = "{{ route('admin.transactions.ajax.get.data') }}";
            /* if ($(window).width() <= 375) {
                 $.fn.DataTable.ext.pager.numbers_length = 7;
             }*/
 
             var cols = [
                 {"data": "applicant_name", "name": 'applicant_name'},
-                {"data": "policy_date", "name": 'policy_date'},
-                {"data": "policy_code", "name": 'policy_code'},
+                {"data": "member_id", "name": 'member_id'},
+                {"data": "account_code", "name": 'account_code'},                
                 {"data": "amount", "name": 'amount'},
-                {"data": "term", "name": 'term'},
-                {"data": "account_type", "name": 'account_type'},
-                {"data": "maturity_date", "name": 'maturity_date'},
-                {"data": "installment_number", "name": 'installment_number'},
-                {"data": "paid_installment", "name": 'paid_installment'},
-                {"data": "unpaid_installment", "name": 'unpaid_installment'},
-                {"data": "paid_amount", "name": 'paid_amount'},
-                {"data": "required_amount", "name": 'required_amount'},
+                {"data": "type", "name": 'type'},
+                {"data": "paid_date", "name": 'paid_date'},
+                {"data": "create_user_name", "name": 'create_user_name'},
                 {"data": "actions", "name": "actions"},
                 {"data": "updated_at", "name": "updated_at", 'searchable': false, 'visible': false}
             ];
 
             var order = [
-                [5, 'desc']
+                [8, 'desc']
             ];
 
-            $("#list_table").DataTable({
+            var list_table_tab = $("#list_table").DataTable({
                 destroy: true,
                 processing: true,
                 stateSave: true,
@@ -121,6 +135,22 @@
                 order: order
             });
 
+            $(".datepicker").datepicker({format:"yyyy-mm-dd"});
+
+            $(".datepicker").change(function(){
+                var start_date = $("#start_date").val();
+                var end_date = $("#end_date").val();
+                var v = start_date+'&'+end_date;
+                list_table_tab.columns(5).search(v, true, false).draw();
+            });
+
+            $("#create_user_id").change(function(){
+                var i = $(this).attr('data-column');
+                var v = $(this).val();
+                var v = String(v);
+                list_table_tab.columns(i).search(v, true, false).draw();
+
+            })
         });
     </script>
 

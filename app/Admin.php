@@ -13,7 +13,7 @@ class Admin extends Authenticatable
 
     const DD_PREFIX = 'DD';
     const RD_PREFIX = 'RD';
-    const SAVINGS_PREFIX = 'SV';
+    const SAVINGS_PREFIX = 'SAV';
     const FD_PREFIX = 'FD';
     const MN_PREFIX = 'MN';
     const LN_PREFIX = 'LN';
@@ -28,6 +28,9 @@ class Admin extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $appends = [
+        'text'
+    ];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -36,6 +39,11 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getTextAttribute()
+    {
+        return $this->name;
+    }
 
     public static function getTygetPrefixpeOptions($id = null)
     {
@@ -71,8 +79,21 @@ class Admin extends Authenticatable
         //$message = "This is a test message from the PHP API script.";
         // 612 chars or less
         // A single number or a comma-seperated list of numbers
-        $message = urlencode($message);
+        //$message = urlencode($message);
+
         $data = "username=".$username."&hash=".$hash."&message=".$message."&sender=".$sender."&numbers=".$numbers."&test=".$test;
+    $apiKey = urlencode($username);
+    
+    // Message details
+    $numbers = array($numbers);
+    $sender = urlencode($sender);
+    $message = rawurlencode($message); 
+    $numbers = implode(',', $numbers);
+
+ 
+    // Prepare data for POST request
+        $data = array('apikey' => $apiKey, 'numbers' => $numbers, "sender" => $sender, "message" => $message); 
+
         $ch = curl_init('http://api.textlocal.in/send/?');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -85,7 +106,7 @@ class Admin extends Authenticatable
 
     public static function getAddress()
     {
-        return "SCO 88 2ND F SECTOR 0C CHANDIGARH 160036--SMB001";
+        return "Plot No. 144 Sector 39 west, Chandigarh - 160036 -- PMB001";
     }
 
     public function rules()

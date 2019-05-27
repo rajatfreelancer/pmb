@@ -7,24 +7,34 @@ use Illuminate\Database\Eloquent\Model;
 class AccountTransaction extends Model
 {
     //
-    const MEDTHOD_CREDIT = 1;
-    const MEDTHOD_DEBIT = 2;
+    const METHOD_CREDIT = 1;
+    const METHOD_DEBIT = 2;
 
     protected $appends = [
         'total'
     ];
 
+    public function createUser()
+    {
+        return $this->belongsTo(Admin::class, 'create_user_id');
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id');
+    }
+
     public function getTotalAttribute()
     {
-        $transaction = AccountTransaction::whereDate('paid_date', '<=', $this->paid_date)->where('account_id', $this->account_id)->where('method', self::MEDTHOD_CREDIT)->sum('amount');
+        $transaction = AccountTransaction::whereDate('paid_date', '<=', $this->paid_date)->where('account_id', $this->account_id)->where('method', self::METHOD_CREDIT)->sum('amount');
         return $transaction;
     }
 
     public static function getMethodOptions($id = null)
     {
         $list = [
-            self::MEDTHOD_CREDIT => 'CREDIT',
-            self::MEDTHOD_DEBIT => 'DEBIT',
+            self::METHOD_CREDIT => 'CREDIT',
+            self::METHOD_DEBIT => 'DEBIT',
         ];
 
         if ($id === null) {
@@ -53,7 +63,7 @@ class AccountTransaction extends Model
     {
         $this->amount = $request->amount;
         $this->account_id = $request->account_id;
-        $this->method = $request->method ? $request->method : self::MEDTHOD_CREDIT; 
+        $this->method = $request->method ? $request->method : self::METHOD_CREDIT; 
         $this->paid_date = $request->paid_date ? date("Y-m-d H:i:s", strtotime($request->paid_date)) : date("Y-m-d H:i:s");
         $this->create_user_id = $request->create_user_id ? $request->create_user_id : \Auth::guard('admins')->user()->id;
     }

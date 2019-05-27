@@ -29,9 +29,14 @@ class Account extends Model
         'installment_number',
         'paid_installment',
         'unpaid_installment',
-        'paid_amount'    
+        'paid_amount',
+        'text'    
     ];
 
+    public function getTextAttribute()
+    {
+        return $this->ori_account_number;
+    }
     /*public function getMaturityAmountAttribute()
     {
         if($this->account_type == self::TYPE_DD) {
@@ -109,7 +114,7 @@ class Account extends Model
 
     public function transactions()
     {
-        return $this->hasMany(AccountTransaction::class, 'account_id')->where('method', AccountTransaction::MEDTHOD_CREDIT);
+        return $this->hasMany(AccountTransaction::class, 'account_id')->where('method', AccountTransaction::METHOD_CREDIT);
     }
 
     public function createUser()

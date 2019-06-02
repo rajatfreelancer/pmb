@@ -32,8 +32,17 @@ class Account extends Model
         'paid_amount',
         'text',
         'denomination_amount_words',
-        'maturity_amount_words',            
+        'maturity_amount_words',   
+        'required_amount'         
     ];
+
+    public function getRequiredAmountAttribute()
+    {
+        $denomination_amount = $this->denomination_amount;
+        $installment_number = $this->installment_number;
+        $amount = $denomination_amount * $installment_number;
+        return $amount;
+    }
 
     public function getDenominationAmountWordsattribute()
     {
@@ -372,7 +381,7 @@ class Account extends Model
     public function rules()
     {
         $array = [
-
+        'nominee_name' => 'required',
         ];
 
         return $array;
@@ -428,7 +437,7 @@ class Account extends Model
         }elseif(!is_array($type)){
             $type = array($type);
         }
-        $required_amount = Account::whereIn('account_type', $type)->get()->sum('payable_amount');
+        $required_amount = Account::whereIn('account_type', $type)->get()->sum('required_amount');
         return $required_amount;
     }
 

@@ -3,7 +3,7 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="{{ asset('img/profile_small.jpg') }}" />
+                            <img alt="image" class="img-circle" width="50px" height="50px"src="{{ asset('img/logo.jpeg') }}" />
                              </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Admin</strong>

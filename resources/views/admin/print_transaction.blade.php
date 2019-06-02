@@ -29,10 +29,12 @@
     <div class="row">
         <div>
             <p id="hide_div"> 
+                Account No: {{ $account->ori_account_number}}
+                Account Name: {{ $account->user->name }}({{ $account->user->ori_member_id}})<br>
                 Hide Transactions before
-                <input type="text" class="datepicker" value="{{ $account->policy_date }}" id="start_date" name="start_date" /><br>
-                Show First Row
-                <input type="checkbox" value="1" id="check_first_row" name="check_first_row" checked="" /><br>
+                <input type="text" class="datepicker" value="{{ $account->policy_date }}" id="start_date" name="start_date" />
+                <!-- <br>Show First Row
+                <input type="checkbox" value="1" id="check_first_row" name="check_first_row"  checked="" /><br>-->
                 <a id="print" class="btn btn-primary ui button blue">Print</a>
                 <a id="back" class="btn btn-primary ui button blue" href="{{ route('admin.accounts') }}">Back</a>
             </p>
@@ -40,8 +42,8 @@
         </div>
     </div>
     <div class="row">
-        <table style="width:100%;"">
-        <thead>
+        <table style="width:100%;">
+       <!--  <thead>
         <tr class="first_row" style="border-top: 1px solid #000";border-bottom: 1px solid #000;">
             <th scope="col" style="width:20%;border-right: 0px solid #000;">Date</th>
             <th scope="col" style="width:20%;border-right: 0px solid #000;">Particular/Transaction ID</th>
@@ -49,7 +51,7 @@
             <th scope="col" style="width:20%;border-right: 0px solid #000;">Debit Amount</th>
             <th scope="col" style="width:20%;border-right: 0px solid #000;">Total Amount</th>
         </tr>
-        </thead>
+        </thead> -->
         <tbody>
              @if(!empty($transactions))
             @foreach($transactions as $transaction)

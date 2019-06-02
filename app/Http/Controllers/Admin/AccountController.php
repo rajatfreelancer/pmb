@@ -86,7 +86,7 @@ class AccountController extends Controller
                 return $row->paid_amount;
             })
             ->addColumn("required_amount", function ($row) {
-                return $row->payable_amount;
+                return $row->required_amount;
             })
             ->addColumn("actions", function ($row) {
                 return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" id="print_transactions_'.$row->id.'" href='.route("admin.print.transactions",$row->id).'>Print transactions</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';

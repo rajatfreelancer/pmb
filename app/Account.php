@@ -30,13 +30,60 @@ class Account extends Model
         'paid_installment',
         'unpaid_installment',
         'paid_amount',
-        'text'    
+        'text',
+        'denomination_amount_words',
+        'maturity_amount_words',            
     ];
 
+    public function getDenominationAmountWordsattribute()
+    {
+        $number = $this->denomination_amount;    
+        $amount = $this->numberWords($number);   
+        return $amount;
+    }
+    public function getMaturityAmountWordsattribute()
+    {
+        $number = $this->maturity_amount;    
+        $amount =  $this->numberWords($number);   
+        return $amount;
+    }
+    public function numberWords($number) {
+
+        $decimal = round($number - ($no = floor($number)), 2) * 100;
+        $hundred = null;
+        $digits_length = strlen($no);
+        $i = 0;
+        $str = array();
+        $words = array(0 => '', 1 => 'one', 2 => 'two',
+            3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
+            7 => 'seven', 8 => 'eight', 9 => 'nine',
+            10 => 'ten', 11 => 'eleven', 12 => 'twelve',
+            13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen',
+            16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen',
+            19 => 'nineteen', 20 => 'twenty', 30 => 'thirty',
+            40 => 'forty', 50 => 'fifty', 60 => 'sixty',
+            70 => 'seventy', 80 => 'eighty', 90 => 'ninety');
+        $digits = array('', 'hundred','thousand','lakh', 'crore');
+        while( $i < $digits_length ) {
+            $divider = ($i == 2) ? 10 : 100;
+            $number = floor($no % $divider);
+            $no = floor($no / $divider);
+            $i += $divider == 10 ? 1 : 2;
+            if ($number) {
+                $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
+                $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+                $str [] = ($number < 21) ? $words[$number].' '. $digits[$counter]. $plural.' '.$hundred:$words[floor($number / 10) * 10].' '.$words[$number % 10]. ' '.$digits[$counter].$plural.' '.$hundred;
+            } else $str[] = null;
+        }
+        $Rupees = implode('', array_reverse($str));
+        $paise = ($decimal) ? "." . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . ' Paise' : '';
+        return ($Rupees ? 'Rupees '.$Rupees : '') . $paise.' Only';
+    }
     public function getTextAttribute()
     {
         return $this->ori_account_number;
     }
+
     /*public function getMaturityAmountAttribute()
     {
         if($this->account_type == self::TYPE_DD) {
@@ -114,7 +161,7 @@ class Account extends Model
 
     public function transactions()
     {
-        return $this->hasMany(AccountTransaction::class, 'account_id')->where('method', AccountTransaction::METHOD_CREDIT);
+        return $this->hasMany(AccountTransaction::class, 'account_id')->where('method', AccountTransaction::METHOD_CREDIT)->orderBy('paid_date');
     }
 
     public function createUser()
@@ -139,6 +186,7 @@ class Account extends Model
         $this->create_user_id = \Auth::guard('admins')->user()->id;
         $this->user_id = $request->user_id;
         $this->policy_date = $request->policy_date;
+        $this->message_facility = $request->message_facility;
         $this->maturity_date = $request->maturity_date ? $request->maturity_date : date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
         $this->maturity_amount = $request->maturity_amount;
         //$this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
@@ -356,6 +404,32 @@ class Account extends Model
     {
         $accounts = Account::where("user_id", $this->user_id)->where('status', Account::STATUS_ACTIVE)->where('account_type', Account::TYPE_SAVINGS)->get();
         return $accounts;
+    }
+
+    public static function getTotalPaid($type)
+    {
+        if ($type == "") {
+            $type = [Account::TYPE_DD, Account::TYPE_RD];
+        }elseif(!is_array($type)){
+            $type = array($type);
+        }
+
+        $amounts = AccountTransaction::whereHas('account', function($q) use($type) {
+            $q->whereIn('account_type', $type);
+        })->where('method', AccountTransaction::METHOD_CREDIT)->sum('amount');
+
+        return $amounts;
+    }
+
+    public static function getTotalRequired($type)
+    {
+        if ($type == "") {
+            $type = [Account::TYPE_DD, Account::TYPE_RD];
+        }elseif(!is_array($type)){
+            $type = array($type);
+        }
+        $required_amount = Account::whereIn('account_type', $type)->get()->sum('payable_amount');
+        return $required_amount;
     }
 
 }

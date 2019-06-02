@@ -11,8 +11,22 @@ class AccountTransaction extends Model
     const METHOD_DEBIT = 2;
 
     protected $appends = [
-        'total'
+        'total',
+        'total_left',
+        'transaction_id'
     ];
+
+    public function getTotalLeftAttribute()
+    {
+        $required_amount = AccountTransaction::whereDate('paid_date', '<=', $this->paid_date)->where('account_id', $this->account_id)->where('method', self::METHOD_CREDIT)->get()->sum('payable_amount');        
+        $left = $this->total - $required_amount;
+        return $left;
+    }
+    
+        public function getTransactionIdAttribute()
+    {
+        return str_pad($this->id, 8, '0', STR_PAD_LEFT);
+    }
 
     public function createUser()
     {

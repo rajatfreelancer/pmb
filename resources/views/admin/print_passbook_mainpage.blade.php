@@ -92,9 +92,9 @@
         </div>
         <div class="col-md-3">
         <div class="picture_div" style="height:200px; border:1px solid #000;width: 150px">
-            @if(!empty($account->user->profile_pic))
+            <!-- @if(!empty($account->user->profile_pic))
                 <img width="50%" height="150px" src="{{ asset('uploads') }}/{{ $account->user->profile_pic }}">
-            @endif
+            @endif -->
 </div>
 
             <br>

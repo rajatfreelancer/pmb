@@ -52,6 +52,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
         Route::get('ajax-get-data', 'AccountController@getData')->name('ajax.get.data');
         Route::get('print_passbook/{id}', 'AccountController@printPassbook')->name('print.passbook');
+        Route::get('print_fd/{id}', 'AccountController@printFd')->name('print.fd');
+        Route::get('print_transactions/{id}', 'AccountController@printTransactions')->name('print.transactions');
         Route::get('account_export/{type?}', 'AccountController@export')->name('account.export');
         Route::post('account_export/{type?}', 'AccountController@export')->name('account.export.post');
          Route::get('transactions_export/{type?}', 'TransactionController@export')->name('transactions.export');

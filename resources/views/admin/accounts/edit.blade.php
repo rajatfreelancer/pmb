@@ -96,7 +96,15 @@
                                    <input type="text" class="form-control" name="interest_rate" value="{{ $account->interest_rate }}"/>
                                 </div>
                             </div>
-                           
+                           <div class="form-group" id="nominee_name_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Message Facility</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="checkbox" class="form-control" name="message_facility"
+                                           value="1" {{ $account->message_facility == 1 ? 'checked' : '' }}>
+                                </div>
+                            </div>
                            <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">First Nominee Name</label>

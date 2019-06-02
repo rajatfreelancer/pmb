@@ -15,7 +15,7 @@
                         Accounts
                         <span class="pull-right">
                             <a href="{{ route('admin.accounts.create') }}" class="btn btn-xs btn-primary">Add</a>
-                            <a href="{{ route('admin.transactions.export', $type) }}" onclick="event.preventDefault();
+                            <a href="{{ route('admin.account.export', $type) }}" onclick="event.preventDefault();
                                                      document.getElementById('export-form').submit();"class="btn btn-xs btn-primary">Export</a>
                         </span>
                     </div>
@@ -23,7 +23,7 @@
                     <div class="panel-body">
                         <div class="table-responsive">
                         @if($type == "")
-                        <form method="POST" action="{{ route('admin.transactions.export.post', $type) }}" id="export-form">
+                        <form method="POST" action="{{ route('admin.account.export.post', $type) }}" id="export-form">
                             @csrf()
                              <div class="form-group">
                                 <div class="col-md-4">
@@ -51,6 +51,7 @@
                         <table width="100%" class="table table-striped table-bordered table-hover dataTables-example" id="list_table">
                             <thead>
                             <tr>
+                                <th>Actions</th>
                                 <th>Applicant Name</th>
                                 <th>Policy Date</th>
                                 <th>Policy Code</th>                                           
@@ -73,27 +74,67 @@
                                   <th>Actual Maturity Date</th>     
                                   <th>Actual Maturity Amount</th>   
                                   <th>Actual Interest Rate</th>  
+                                  <th>Remarks</th>
                                 @endif
                                 <th>Status</th>   
+                                @if($type == App\Account::TYPE_SAVINGS)                                
+                                <td>Balance</td>
+                                @endif
                                 <th>Created By</th> 
-                                <th>Actions</th>
-                               {{-- <th>Contact No.</th>--}}
                             </tr>
                             </thead>
-                           <tbody>
-                           
-                            </tbody>
+                           <tbody>                           
+                            </tbody>   
+                             @if($type == "")                          
+                            <tfoot>
+                                <td></td>
+                                 <td></td>
+                                <td></td>
+                                <td></td>                                           
+                                @if($type == "") 
+                                <td id="sum_amt"></td>
+                                <td></td>
+                                <td></td>                                
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td id="sum_paid_amt"></td>                                
+                                <td id="sum_req_amt"></td>
+                                @elseif($type == App\Account::TYPE_FD)
+                                    <td></td>
+                                    <td></td>
+                                  <td></td>     
+                                  <td></td>     
+                                  <td></td>   
+                                  <td></td>     
+                                  <td></td>   
+                                  <td></td>  
+                                  <td></td>  
+                                @endif
+                                @if($type == App\Account::TYPE_SAVINGS)                                
+                                <td></td>
+                                @endif
+                                <td></td>   
+                                <td></td> 
+                                
+                            </tfoot>
+                            @endif
                         </table>
                         <!-- /.table-responsive -->
                         </div>
-                        <!-- @if($type == "")
+                        @if($type == "")
                         <div class="data_table_balance">
                 <p>
-                    <span class="d_table_label"> Paid Amount: </span>
-                    <span class="d_table_amount">Rs.</span><span class="d_table_amount" id="amount_paid"></span>
+                    <span class="d_table_label"> Grand Total Paid Amount: </span>
+                    @php $paid = App\Account::getTotalPaid($type); @endphp
+                    <span class="d_table_amount">Rs.{{ $paid }}</span><span class="d_table_amount" id="amount_paid"></span><br>
+
+                    <span class="d_table_label"> Grand Total Required Amount: </span>
+                    <span class="d_table_amount">Rs.{{  App\Account::getTotalRequired($type) }}</span><span class="d_table_amount" id="amount_paid"></span>
                 </p>
             </div>
-                        @endif -->
+                        @endif
                     </div>
                     <!-- /.panel-body -->
                 </div>
@@ -108,6 +149,8 @@
 @endsection
 @section('js')
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/plug-ins/1.10.12/api/sum().js"></script>
     <script>
        var list_table_tab;
        var hidden_columns = true;
@@ -121,6 +164,7 @@
 
             if(type == "") {
                 var cols = [
+                    {"data": "actions", "name": "actions"},
                     {"data": "applicant_name", "name": 'applicant_name'},
                     {"data": "policy_date", "name": 'policy_date'},
                     {"data": "policy_code", "name": 'policy_code'},
@@ -134,8 +178,7 @@
                     {"data": "paid_amount", "name": 'paid_amount'},
                     {"data": "required_amount", "name": 'required_amount'},
                     {"data": "status", "name": "status"},                    
-                    {"data": "create_user_name", "name": "create_user_name"},
-                    {"data": "actions", "name": "actions"},
+                    {"data": "create_user_name", "name": "create_user_name"},                   
                     {"data": "created_at", "name": "created_at", 'searchable': false, 'visible': false}
                 ];
 
@@ -145,6 +188,7 @@
             }else if(type == "{{ App\Account::TYPE_FD }}") {
                 var tu = "{{ $url }}";
                 var cols = [
+                    {"data": "actions", "name": "actions"},
                     {"data": "applicant_name", "name": 'applicant_name'},
                     {"data": "policy_date", "name": 'policy_date'},
                     {"data": "policy_code", "name": 'policy_code'},
@@ -157,8 +201,8 @@
                     {"data": "actual_maturity_amount", "name": 'actual_maturity_amount'},
                     {"data": "actual_interest_rate", "name": 'actual_interest_rate'},
                     {"data": "status", "name": "status"},  
-                    {"data": "create_user_name", "name": "create_user_name"},                  
-                    {"data": "actions", "name": "actions"},
+                    {"data": "create_user_name", "name": "create_user_name"},
+                    {"data": "remarks", "name": 'remarks'},
                     {"data": "created_at", "name": "created_at", 'searchable': false, 'visible': false}
                 ];
 
@@ -166,15 +210,15 @@
                     [13, 'desc']
                 ];
             }else if(type == "{{ App\Account::TYPE_SAVINGS}}") {
-                debugger;
 
                 var tu = "{{ $url }}";
                 var cols = [
+                    {"data": "actions", "name": "actions"},
                     {"data": "applicant_name", "name": 'applicant_name'},
                     {"data": "policy_date", "name": 'policy_date'},
                     {"data": "policy_code", "name": 'policy_code'},
-                    {"data": "status", "name": "status"},                    
-                    {"data": "actions", "name": "actions"},
+                    {"data": "status", "name": "status"},          
+                    {"data": "balance", "name": 'balance'},                              
                     {"data": "created_at", "name": "created_at", 'searchable': false, 'visible': false}
                 ];
 
@@ -212,16 +256,29 @@
                 ajax: tu,
                 columns: cols,
                 order: order,
+                drawCallback:function(){
+                    var api = this.api(); 
+                    if (type == "") {
+                    var sum_amt = api.column(4, {page:'current'} ).data().sum();
+                    var sum_paid_amt = api.column(11, {page:'current'} ).data().sum();
+                    var sum_req_amt = api.column(12, {page:'current'} ).data().sum();
+                    $("#sum_amt").html(sum_amt);
+                    $("#sum_paid_amt").html(sum_paid_amt);
+                    $("#sum_req_amt").html(sum_req_amt);
+                    }
+
+                },
+                /*
                 drawCallback:function() {
                     if(type == ""){
-                    var total = this.api().columns(11).data().reduce(function (a, b){
+                    var total = this.api().columns(10).data().reduce(function (a, b){
                         var a = parseInt(a);
                         var b = parseInt(b);
                         return eval(a) + eval(b);
                     }, 0);
                     $("#amount_paid").html(total);
                     }
-                }
+                }*/
             });
             $(".datepicker").datepicker({format:"yyyy-mm-dd"});
 

@@ -58,7 +58,7 @@
                                     <label class="control-label">Policy Date</label>
                                 </div>
                                 <div class="col-md-6">
-                                <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="policy_date" /> 
+                                <input type="text" class="form-control datepicker" value="{{ date('Y-m-d', $account->policy_date) }}" name="policy_date" /> 
                                 </div>
                             </div>
 

@@ -87,7 +87,8 @@
                                 </div>
                             
                             </div>
-                            <?php /*<div class="form-group">
+                            
+                           <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Method</label>
                                 </div>
@@ -99,7 +100,7 @@
                                     @endforeach
                                     </select>
                                 </div>
-                            </div>*/?>
+                            </div>
 
 
                             <button class="btn btn-primary" type="submit">Save</button>

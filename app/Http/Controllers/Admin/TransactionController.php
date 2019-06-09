@@ -56,6 +56,9 @@ class TransactionController extends Controller
         ->editColumn('id', function($row){
             return $row->id;
         })
+        ->addColumn('transaction_id', function ($row) {
+            return $row->transaction_id;
+        })
         ->addColumn('create_user_name', function($row){
             return $row->createUser->name;
         })

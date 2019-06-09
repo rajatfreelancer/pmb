@@ -37,6 +37,7 @@
             <li><a href="{{ route('admin.accounts') }}">RD/DD Accounts</a></li>
             <li><a href="{{ route('admin.accounts.fd') }}">FD Accounts</a></li>
             <li><a href="{{ route('admin.accounts.savings') }}">Savings Accounts</a></li>
+            <li><a href="{{ route('admin.accounts.mis') }}">MIS</a></li>
             <li><a href="{{ route('admin.transactions.index') }}">Transactions</a></li>
         </ul>
 

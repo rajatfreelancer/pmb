@@ -198,6 +198,7 @@ class Account extends Model
         $this->message_facility = $request->message_facility;
         $this->maturity_date = $request->maturity_date ? $request->maturity_date : date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        
         $this->maturity_amount = $request->maturity_amount;
+        $this->monthly_amount = $request->monthly_amount;
         //$this->maturity_amount = $this->payable_amount + $this->payable_amount * $this->interest_rate/100;
         
        /* if($this->account_type == self::TYPE_DD) {
@@ -280,7 +281,7 @@ class Account extends Model
             self::TYPE_RD => 'Reccurring Deposit',
             self::TYPE_FD => 'Fixed Deposit',
             self::TYPE_SAVINGS => 'Savings',
-            //self::TYPE_MONTHLY_INCOME => 'Monthly Income Scheme',
+            self::TYPE_MONTHLY_INCOME => 'Monthly Income Scheme',
            // self::TYPE_LOAN => 'Loan Scheme',
         ];
 

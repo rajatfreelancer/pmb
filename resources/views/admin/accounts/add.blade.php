@@ -50,6 +50,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="form-group" id="duration_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Duration(in Months)</label>
@@ -58,12 +59,22 @@
                                 <input type="text" class="form-control" name="duration" id="duration"/> 
                                 </div>
                             </div>
+
                             <div class="form-group" id="policy_date_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Policy Date</label>
                                 </div>
                                 <div class="col-md-6">
                                 <input type="text" class="form-control datepicker" value="{{ date('Y-m-d') }}" name="policy_date" id="policy_date" /> 
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="monthly_amount_div" style="display:none;">
+                                <div class="col-md-3">
+                                    <label class="control-label">Monthly Amount</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="monthly_amount"/>
                                 </div>
                             </div>
 
@@ -107,7 +118,7 @@
                                     <label class="control-label">Message Facility</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" class="form-control" name="message_facility"
+                                    <input type="checkbox" name="message_facility"
                                            value="1">
                                 </div>
                             </div>
@@ -186,9 +197,6 @@
                 <!-- /.panel -->
             </div>
             <!-- /.col-lg-12 -->
-
-
-
         </div>
     </div>
     <!-- /.row -->
@@ -269,6 +277,16 @@ $(document).ready(function(){
                 }
             update_durations(val);
         }else{
+            if(val == "{{ App\Account::TYPE_MONTHLY_INCOME}}"){
+                    $("#monthly_amount_div").show();
+                    $("#denomination_div").show();
+                    $("#denomination_amount_label").html('Amount');
+                    $("#duration_div").show();
+                    $("#maturity_amount_div").hide();
+                    $("#interest_rate_div").hide();
+                    $("#interest_rate_div").hide();
+                }
+
             $("#duration_div").hide();
         }
     })

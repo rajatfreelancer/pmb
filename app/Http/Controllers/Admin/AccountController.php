@@ -269,6 +269,9 @@ class AccountController extends Controller
             ->addColumn("required_amount", function ($row) {
                 return $row->payable_amount;
             })
+            ->addColumn("status", function ($row) {
+                return $row->getStatusOptions($row->status);
+            })
             ->addColumn("actions", function ($row) {
                 return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });

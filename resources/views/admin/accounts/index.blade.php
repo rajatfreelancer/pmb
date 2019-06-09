@@ -75,6 +75,10 @@
                                   <th>Actual Maturity Amount</th>   
                                   <th>Actual Interest Rate</th>  
                                   <th>Remarks</th>
+                                  @elseif($type == App\Account::TYPE_MONTHLY_INCOME)
+                                  <th>Amount</th>
+                                  <th>Monthly Installment</th>
+                                  <th>Maturity Date</th>
                                 @endif
                                 <th>Status</th>   
                                 @if($type == App\Account::TYPE_SAVINGS)                                
@@ -114,6 +118,10 @@
                                 @endif
                                 @if($type == App\Account::TYPE_SAVINGS)                                
                                 <td></td>
+                                @elseif($type == App\Account::TYPE_MONTHLY_INCOME)
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
                                 @endif
                                 <td></td>   
                                 <td></td> 
@@ -219,6 +227,23 @@
                     {"data": "policy_code", "name": 'policy_code'},
                     {"data": "status", "name": "status"},          
                     {"data": "balance", "name": 'balance'},                              
+                    {"data": "created_at", "name": "created_at", 'searchable': false, 'visible': false}
+                ];
+
+                var order = [
+                    [5, 'desc']
+                ];
+            }else if(type == "{{ App\Account::TYPE_MONTHLY_INCOME}}") {      
+                var tu = "{{ $url }}";        
+                var cols = [
+                    {"data": "actions", "name": "actions"},
+                    {"data": "applicant_name", "name": 'applicant_name'},
+                    {"data": "policy_date", "name": 'policy_date'},
+                    {"data": "policy_code", "name": 'policy_code'},                       
+                    {"data": "denomination_amount", "name": 'denomination_amount'},  
+                    {"data": "monthly_amount", "name": 'monthly_amount'},                        
+                    {"data": "maturity_date", "name": 'maturity_date'},        
+                    {"data": "status", "name": "status"},                    
                     {"data": "created_at", "name": "created_at", 'searchable': false, 'visible': false}
                 ];
 

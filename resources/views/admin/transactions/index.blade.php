@@ -103,7 +103,7 @@
             ];
 
             var order = [
-                [8, 'desc']
+                [9, 'desc']
             ];
 
             var list_table_tab = $("#list_table").DataTable({

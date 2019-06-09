@@ -400,6 +400,9 @@ class AccountController extends Controller
             if ($model->account_type == Account::TYPE_SAVINGS) {
                 return redirect()->route('admin.accounts.savings')->with('success', 'Account is successfully added.');        
             }
+            if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+                return redirect()->route('admin.accounts.mis')->with('success', 'Account is successfully added.');        
+            }
             return redirect()->route('admin.accounts')->with('success', 'Account is successfully added.');
         /*} catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Something went Wrong: ' . $e->getMessage());

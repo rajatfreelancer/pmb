@@ -228,6 +228,7 @@ class TransactionController extends Controller
         $data = $data->get()->toArray();
 
         $headers = [
+            'Transaction Id',
             'Applicant Name',
             'Member Id',
             'Account Code',
@@ -241,6 +242,7 @@ class TransactionController extends Controller
         foreach ($data as $value) {
             if ($type == "") {
              $array_value = [
+                    $value['transaction_id'],
                     $value['account']['user']['name'].''.$value['account']['user']['last_name'],
                     $value['account']['user']['text'],
                     $value['account']['ori_account_number'],

@@ -208,16 +208,16 @@ $(document).ready(function(){
     $(".datepicker").datepicker({format:"yyyy-mm-dd"});
     $('.users_select2').select2({
         ajax: {
-    url: "{{ url('admin/get-users-list') }}",
-    dataType: 'json',
-    processResults: function (data) {
-      // Tranforms the top-level key of the response object from 'items' to 'results'
-      return {
-        results: data.data
-      };
+        url: "{{ url('admin/get-users-list') }}",
+        dataType: 'json',
+        processResults: function (data) {
+        // Tranforms the top-level key of the response object from 'items' to 'results'
+        return {
+            results: data.data
+        };
+        }
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
-    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-  }
     });
     
     $('.users_select2').on('select2:select', function (e) {

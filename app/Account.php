@@ -190,10 +190,13 @@ class Account extends Model
         $this->interest_rate = $request->interest_rate;
         $this->denomination_amount = $request->denomination_amount;
         $this->duration = $request->duration;
-        $this->prefix = $this->getMemberPrefix();
-        $this->account_number = $this->getAccountNumber();
-        $this->create_user_id = \Auth::guard('admins')->user()->id;
-        $this->user_id = $request->user_id;
+        if($this->id == null) {
+            $this->prefix = $this->getMemberPrefix();
+            $this->account_number = $this->getAccountNumber();
+            $this->create_user_id = \Auth::guard('admins')->user()->id;
+            $this->user_id = $request->user_id;
+        }
+       
         $this->policy_date = $request->policy_date;
         $this->message_facility = $request->message_facility;
         $this->maturity_date = $request->maturity_date ? $request->maturity_date : date("Y-m-d", strtotime($this->policy_date.' + '.$this->duration.' months'));        

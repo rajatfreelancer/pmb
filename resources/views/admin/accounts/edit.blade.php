@@ -62,6 +62,15 @@
                                 </div>
                             </div>
 
+                            <div class="form-group" id="monthly_amount_div" style="display:none;">
+                                <div class="col-md-3">
+                                    <label class="control-label">Monthly Amount</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="monthly_amount"/>
+                                </div>
+                            </div>
+
                             <div class="form-group" id="duration_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Maturity Amount</label>

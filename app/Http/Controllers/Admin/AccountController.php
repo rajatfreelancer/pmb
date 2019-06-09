@@ -392,7 +392,18 @@ class AccountController extends Controller
                     SystemFile::saveUploadedFile($documents, $model, 'document');
                 }
             }
-            
+            if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            $transaction = AccountTransaction::where('account_id', $model->id)->first();
+            if ($transaction == null) {
+                $transaction = new AccountTransaction();
+                $transaction->amount = $account->denomination_amount;
+                $transaction->account_id = $account->id;
+                $transaction->method = AccountTransaction::METHOD_CREDIT; 
+                $transaction->paid_date = $account->policy_date;
+                $transaction->create_user_id = $account->create_user_id;
+                $transaction->save();            
+            }
+        }
             \DB::commit();
             if ($model->account_type == Account::TYPE_FD) {
                 return redirect()->route('admin.accounts.fd')->with('success', 'Account is successfully added.');        
@@ -467,12 +478,28 @@ class AccountController extends Controller
             }
         }
 
+        if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            $transaction = AccountTransaction::where('account_id', $model->id)->first();
+            if ($transaction == null) {
+                $transaction = new AccountTransaction();
+                $transaction->amount = $account->denomination_amount;
+                $transaction->account_id = $account->id;
+                $transaction->method = AccountTransaction::METHOD_CREDIT; 
+                $transaction->paid_date = $account->policy_date;
+                $transaction->create_user_id = $account->create_user_id;
+                $transaction->save();            
+            }
+        }
+
         \DB::commit();
         if ($model->account_type == Account::TYPE_FD) {
             return redirect()->route('admin.accounts.fd')->with('success', 'Account is successfully updated.');
         }
         if ($model->account_type == Account::TYPE_SAVINGS) {
             return redirect()->route('admin.accounts.savings')->with('success', 'Account is successfully updated.');
+        }
+        if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            return redirect()->route('admin.accounts.mis')->with('success', 'Account is successfully updated.');        
         }
         return redirect()->route('admin.accounts')->with('success', 'Account is successfully updated.');
     }

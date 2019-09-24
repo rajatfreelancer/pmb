@@ -48,6 +48,7 @@
                         <table width="100%" class="table table-striped table-bordered table-hover dataTables-example" id="list_table">
                             <thead>
                             <tr>
+                                <th>Transaction Id</th>
                                 <th>Applicant Name</th>
                                 <th>Member Id</th>
                                 <th>Account Code</th>
@@ -89,6 +90,7 @@
             }*/
 
             var cols = [
+                {"data": "transaction_id", "name": 'transaction_id'},
                 {"data": "applicant_name", "name": 'applicant_name'},
                 {"data": "member_id", "name": 'member_id'},
                 {"data": "account_code", "name": 'account_code'},                
@@ -101,7 +103,7 @@
             ];
 
             var order = [
-                [8, 'desc']
+                [9, 'desc']
             ];
 
             var list_table_tab = $("#list_table").DataTable({

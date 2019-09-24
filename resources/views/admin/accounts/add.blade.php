@@ -50,6 +50,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="form-group" id="duration_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Duration(in Months)</label>
@@ -58,7 +59,8 @@
                                 <input type="text" class="form-control" name="duration" id="duration"/> 
                                 </div>
                             </div>
-                            <div class="form-group" id="duration_div">
+
+                            <div class="form-group" id="policy_date_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Policy Date</label>
                                 </div>
@@ -67,7 +69,16 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" id="duration_div">
+                            <div class="form-group" id="monthly_amount_div" style="display:none;">
+                                <div class="col-md-3">
+                                    <label class="control-label">Monthly Amount</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="monthly_amount"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="maturity_amount_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Maturity Amount</label>
                                 </div>
@@ -75,7 +86,7 @@
                                     <input type="text" class="form-control" name="maturity_amount"/>
                                 </div>
                             </div>
-                            <div class="form-group" id="duration_div">
+                            <div class="form-group" id="maturity_date_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Maturity Date</label>
                                 </div>
@@ -84,16 +95,16 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" id="denomination_div">
                                 <div class="col-md-3">
-                                    <label class="control-label">Denomination Amount</label>
+                                    <label class="control-label" id="denomination_amount_label">Denomination Amount</label>
                                 </div>
                                 <div class="col-md-6">
                                    <input type="text" class="form-control" name="denomination_amount"/>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" id="interest_rate_div">
                                 <div class="col-md-3">
                                     <label class="control-label">Interest Rate (in %)</label>
                                 </div>
@@ -101,8 +112,18 @@
                                    <input type="text" class="form-control" name="interest_rate"/>
                                 </div>
                             </div>
-                           
-                           <div class="form-group">
+
+                            <div class="form-group" id="nominee_name_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Message Facility</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="checkbox" name="message_facility"
+                                           value="1">
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="nominee_name_div">
                                 <div class="col-md-3">
                                     <label class="control-label">First Nominee Name</label>
                                 </div>
@@ -111,7 +132,7 @@
                                            value="">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" id="nominee_relation_div">
                                 <div class="col-md-3">
                                     <label class="control-label">First Nominee Relation</label>
                                 </div>
@@ -176,9 +197,6 @@
                 <!-- /.panel -->
             </div>
             <!-- /.col-lg-12 -->
-
-
-
         </div>
     </div>
     <!-- /.row -->
@@ -190,16 +208,16 @@ $(document).ready(function(){
     $(".datepicker").datepicker({format:"yyyy-mm-dd"});
     $('.users_select2').select2({
         ajax: {
-    url: "{{ url('admin/get-users-list') }}",
-    dataType: 'json',
-    processResults: function (data) {
-      // Tranforms the top-level key of the response object from 'items' to 'results'
-      return {
-        results: data.data
-      };
+        url: "{{ url('admin/get-users-list') }}",
+        dataType: 'json',
+        processResults: function (data) {
+        // Tranforms the top-level key of the response object from 'items' to 'results'
+        return {
+            results: data.data
+        };
+        }
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
-    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-  }
     });
     
     $('.users_select2').on('select2:select', function (e) {
@@ -233,9 +251,42 @@ $(document).ready(function(){
     });
     $("#account_type").change(function(){
         var val = $(this).val();    
-        if (val != "{{ App\Account::TYPE_MONTHLY_INCOME }}" && val != "{{ App\Account::TYPE_LOAN }}"){    
+        if (val != "{{ App\Account::TYPE_MONTHLY_INCOME }}" && val != "{{ App\Account::TYPE_LOAN }}"){ 
+                if(val == "{{ App\Account::TYPE_FD}}"){
+                    $("#denomination_amount_label").html('Amount');
+                    $("#denomination_div").show();
+                    $("#duration_div").show();
+                    $("#maturity_amount_div").show();
+                    $("#interest_rate_div").show();
+                    $("#interest_rate_div").show();
+                }
+                if(val == "{{ App\Account::TYPE_RD}}" || val == "{{ App\Account::TYPE_RD}}"){
+                    $("#denomination_amount_label").html('Denomination Amount');
+                    $("#denomination_div").show();
+                    $("#duration_div").show();
+                    $("#maturity_amount_div").show();
+                    $("#interest_rate_div").show();
+                    $("#interest_rate_div").show();
+                }
+                 if(val == "{{ App\Account::TYPE_SAVINGS}}"){
+                    $("#denomination_div").hide();
+                    $("#duration_div").hide();
+                    $("#maturity_amount_div").hide();
+                    $("#interest_rate_div").hide();
+                    $("#interest_rate_div").hide();
+                }
             update_durations(val);
         }else{
+            if(val == "{{ App\Account::TYPE_MONTHLY_INCOME}}"){
+                    $("#monthly_amount_div").show();
+                    $("#denomination_div").show();
+                    $("#denomination_amount_label").html('Amount');
+                    $("#duration_div").show();
+                    $("#maturity_amount_div").hide();
+                    $("#interest_rate_div").hide();
+                    $("#interest_rate_div").hide();
+                }
+
             $("#duration_div").hide();
         }
     })

@@ -13,9 +13,9 @@ class Admin extends Authenticatable
 
     const DD_PREFIX = 'DD';
     const RD_PREFIX = 'RD';
-    const SAVINGS_PREFIX = 'SAV';
+    const SAVINGS_PREFIX = 'SA';
     const FD_PREFIX = 'FD';
-    const MN_PREFIX = 'MN';
+    const MN_PREFIX = 'MS';
     const LN_PREFIX = 'LN';
     const MEMBER_PREFIX = 'M';
     //

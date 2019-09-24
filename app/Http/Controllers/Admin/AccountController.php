@@ -86,10 +86,10 @@ class AccountController extends Controller
                 return $row->paid_amount;
             })
             ->addColumn("required_amount", function ($row) {
-                return $row->payable_amount;
+                return $row->required_amount;
             })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" id="print_transactions_'.$row->id.'" href='.route("admin.print.transactions",$row->id).'>Print transactions</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -161,7 +161,7 @@ class AccountController extends Controller
                 if($row->status == Account::STATUS_CLOSED) {
                     return "No action";
                 }
-                return '<a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
+                return '<a class="btn btn-primary" href='.route("admin.accounts.mature",$row->id).'>Mature</a><a class="btn btn-primary" href='.route("admin.print.fd",$row->id).'>Print</a><a class="btn btn-primary" id="print_transactions_'.$row->id.'" href='.route("admin.print.transactions",$row->id).'>Print Transactions</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions', 'item_tags']);
 
@@ -169,6 +169,7 @@ class AccountController extends Controller
         return $datatable;
         //return $datatable;
     }
+
 
     public function accountsSavings()
     {
@@ -199,8 +200,11 @@ class AccountController extends Controller
             ->addColumn("status", function ($row) {
                 return $row->getStatusOptions($row->status);
             })
+            ->addColumn("balance", function ($row) {
+                return $row->transactions->sum('amount');
+            })
             ->addColumn("actions", function ($row) {
-                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Transaction</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
+                return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.print.transactions",$row->id).'>Print Transactions</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Transaction</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
         $datatable = $datatable->rawColumns(['actions']);
 
@@ -265,6 +269,9 @@ class AccountController extends Controller
             ->addColumn("required_amount", function ($row) {
                 return $row->payable_amount;
             })
+            ->addColumn("status", function ($row) {
+                return $row->getStatusOptions($row->status);
+            })
             ->addColumn("actions", function ($row) {
                 return '<a class="btn btn-primary" href='.route("admin.print.passbook",$row->id).'>print</a><a class="btn btn-primary" href='.route("admin.transactions.create",['id'=> $row->id]).'>Add Installment</a><a class="btn btn-primary" href='.route("admin.accounts.edit",$row->id).'>Edit</a>';
             });
@@ -286,7 +293,14 @@ class AccountController extends Controller
     {
         try{
             \DB::beginTransaction();
-            $account = Account::find($id);
+             $account = Account::find($id);
+            if ($request->transfer_to_amount) {
+                if ($request->transfer_to_amount > $request->actual_maturity_amount) {
+                    return redirect()->back()->with('error', "Transfered amount can't be greater than maturity_amount");
+                }
+            }
+
+           
             $account->actual_maturity_amount = $request->actual_maturity_amount;
             $account->actual_interest_rate = $request->actual_interest_rate;
             $account->actual_maturity_date = $request->actual_maturity_date;
@@ -298,13 +312,15 @@ class AccountController extends Controller
                 $savings_account = Account::find($request->transfer_to)->where('user_id', $account->user_id)->first();
 
                 if ($savings_account) {
-                    $transaction = new AccountTransaction();
-                    $transaction->amount = $account->actual_maturity_amount;
-                    $transaction->account_id = $account->id;
-                    $transaction->method = self::METHOD_CREDIT; 
+                    $transaction = new AccountTransaction();                    
+                    $transaction->amount = $request->transfer_to_amount ? $request->transfer_to_amount : $account->actual_maturity_amount;
+                    $transaction->account_id = $savings_account->id;
+                    $transaction->method = AccountTransaction::METHOD_CREDIT; 
                     $transaction->paid_date = $account->actual_maturity_date;                    
-                    $transaction->create_user_id = Auth::guard('admins')->user()->id;
+                    $transaction->create_user_id = \Auth::guard('admins')->user()->id;
                     $transaction->save();
+                    $account->transfered_transaction_id = $transaction->id;
+                    $account->save();
                 }
             }
             \DB::commit();    
@@ -376,13 +392,27 @@ class AccountController extends Controller
                     SystemFile::saveUploadedFile($documents, $model, 'document');
                 }
             }
-            
+            if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            $transaction = AccountTransaction::where('account_id', $model->id)->first();
+            if ($transaction == null) {
+                $transaction = new AccountTransaction();
+                $transaction->amount = $account->denomination_amount;
+                $transaction->account_id = $account->id;
+                $transaction->method = AccountTransaction::METHOD_CREDIT; 
+                $transaction->paid_date = $account->policy_date;
+                $transaction->create_user_id = $account->create_user_id;
+                $transaction->save();            
+            }
+        }
             \DB::commit();
             if ($model->account_type == Account::TYPE_FD) {
                 return redirect()->route('admin.accounts.fd')->with('success', 'Account is successfully added.');        
             }
             if ($model->account_type == Account::TYPE_SAVINGS) {
                 return redirect()->route('admin.accounts.savings')->with('success', 'Account is successfully added.');        
+            }
+            if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+                return redirect()->route('admin.accounts.mis')->with('success', 'Account is successfully added.');        
             }
             return redirect()->route('admin.accounts')->with('success', 'Account is successfully added.');
         /*} catch (\Exception $e) {
@@ -448,12 +478,28 @@ class AccountController extends Controller
             }
         }
 
+        if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            $transaction = AccountTransaction::where('account_id', $model->id)->first();
+            if ($transaction == null) {
+                $transaction = new AccountTransaction();
+                $transaction->amount = $account->denomination_amount;
+                $transaction->account_id = $account->id;
+                $transaction->method = AccountTransaction::METHOD_CREDIT; 
+                $transaction->paid_date = $account->policy_date;
+                $transaction->create_user_id = $account->create_user_id;
+                $transaction->save();            
+            }
+        }
+
         \DB::commit();
         if ($model->account_type == Account::TYPE_FD) {
             return redirect()->route('admin.accounts.fd')->with('success', 'Account is successfully updated.');
         }
         if ($model->account_type == Account::TYPE_SAVINGS) {
             return redirect()->route('admin.accounts.savings')->with('success', 'Account is successfully updated.');
+        }
+        if ($model->account_type == Account::TYPE_MONTHLY_INCOME) {
+            return redirect()->route('admin.accounts.mis')->with('success', 'Account is successfully updated.');        
         }
         return redirect()->route('admin.accounts')->with('success', 'Account is successfully updated.');
     }
@@ -527,9 +573,32 @@ class AccountController extends Controller
         return view('admin.print_passbook_mainpage', compact('account','transactions'));
     }
 
+    public function printFd($id)
+    {
+        $account = Account::find($id);
+        $transaction = AccountTransaction::where('account_id', $id)->first();
+        if ($transaction == null) {
+            $transaction = new AccountTransaction();
+            $transaction->amount = $account->denomination_amount;
+            $transaction->account_id = $account->id;
+            $transaction->method = AccountTransaction::METHOD_CREDIT; 
+            $transaction->paid_date = $account->policy_date;
+            $transaction->create_user_id = $account->create_user_id;
+            $transaction->save();            
+        }
+        return view('admin.print_fd', compact('account','transaction'));   
+    }
+
+    public function printTransactions($id)
+    {
+        $account = Account::find($id);        
+        $transactions = $account->transactions;
+        return view('admin.print_transaction', compact('account','transactions'));      
+    }
+
     public function export(Request $request, $type = null)
     {
-        //echo "<pre>";print_r($request->all());exit;
+        //echo "<pre>";print_r($type);exit;
 
         $data = Account::with('user', 'createUser');
 
@@ -592,6 +661,9 @@ class AccountController extends Controller
             ];
         }
         $array = [];
+        $denomination_amount_total = 0;
+        $paid_amount_total = 0;
+        $payable_amount_total = 0;
         foreach ($data as $value) {
             if ($type == "") {
              $array_value = [
@@ -609,6 +681,9 @@ class AccountController extends Controller
                     $value['payable_amount'],
                     $value['create_user']['name']
                 ];
+                $denomination_amount_total = $denomination_amount_total + $value['denomination_amount'];
+                $paid_amount_total = $paid_amount_total + $value['paid_amount'];
+                $payable_amount_total = $payable_amount_total + $value['payable_amount'];
             }else if ($type == Account::TYPE_SAVINGS){
                 $array_value = [
                     $value['user']['name'].''.$value['user']['last_name'],
@@ -632,14 +707,42 @@ class AccountController extends Controller
                     $value['create_user']['name']
                 ];
             }
+            
             $array[] = array_combine($headers, $array_value);
         }
+        if ($type == "") {
+        $array_value_total = [
+                    '',
+                    '',
+                    '',
+                    $denomination_amount_total,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $paid_amount_total,
+                    $payable_amount_total,
+                    ''
+                ];
+          $array[] = array_combine($headers,$array_value_total);
+      }
 
-        return \Excel::create('accounts', function($excel) use ($array) {
+        return \Excel::create('accounts', function($excel) use ($array, $type) {
             
-            $excel->sheet('mySheet', function($sheet) use ($array)
+            $excel->sheet('mySheet', function($sheet) use ($array, $type)
             {
                 $sheet->fromArray($array);
+                if ($type == "") {
+                    $paid = Account::getTotalPaid($type); 
+                    $sheet->appendRow(array(
+    'Grand Total Paid Amount: Rs.'.$paid
+));
+                    $sheet->appendRow(array(
+    'Grand Total Required Amount: Rs.'.Account::getTotalRequired($type)
+));
+                }
             });
             })->download('xls');
     }

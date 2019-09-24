@@ -56,6 +56,9 @@ class TransactionController extends Controller
         ->editColumn('id', function($row){
             return $row->id;
         })
+        ->addColumn('transaction_id', function ($row) {
+            return $row->transaction_id;
+        })
         ->addColumn('create_user_name', function($row){
             return $row->createUser->name;
         })
@@ -204,11 +207,11 @@ class TransactionController extends Controller
         return response()->json(['data' => array_values($accounts), 'status' => 200]);        
     }
 
-    public function export(Request $request)
+    public function export(Request $request, $type = "")
     {
         //echo "<pre>";print_r($request->all());exit;
 
-        $data = AccountTransaction::with('createUser');
+        $data = AccountTransaction::with('createUser', 'account', 'account.user');
 
         if ($request->create_user_id) {
             $data = $data->where('create_user_id', $request->create_user_id);
@@ -225,6 +228,7 @@ class TransactionController extends Controller
         $data = $data->get()->toArray();
 
         $headers = [
+            'Transaction Id',
             'Applicant Name',
             'Member Id',
             'Account Code',
@@ -238,11 +242,12 @@ class TransactionController extends Controller
         foreach ($data as $value) {
             if ($type == "") {
              $array_value = [
-                    $value['user']['name'].''.$value['user']['last_name'],
-                    $value['user']['text'],
-                    $value['ori_account_number'],
+                    $value['transaction_id'],
+                    $value['account']['user']['name'].''.$value['account']['user']['last_name'],
+                    $value['account']['user']['text'],
+                    $value['account']['ori_account_number'],
                     $value['amount'],         
-                    Account::getMethodOptions($value['method']),
+                    AccountTransaction::getMethodOptions($value['method']),
                     date("Y-m-d", strtotime($value['paid_date'])),
                     $value['create_user']['name']
                 ];

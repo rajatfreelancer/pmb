@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             @endif
-                            <?php /*<div class="form-group">
+                            <div class="form-group">
                                 <div class="col-md-3">
                                     <label class="control-label">Method</label>
                                 </div>
@@ -91,11 +91,11 @@
                                     <select name="method" id="account_type" class="form-control">
                                     <option value="">Select Account Method</option>
                                     @foreach(App\AccountTransaction::getMethodOptions() as $type => $value)
-                                    <option value="{{ $type }}">{{ $value }}</option>
+                                    <option value="{{ $type }}" {{ $type == $transaction->method ? 'selected' : ''}}>{{ $value }}</option>
                                     @endforeach
                                     </select>
                                 </div>
-                            </div>*/?>
+                            </div>
 
 
                             <button class="btn btn-primary" type="submit">Save</button>

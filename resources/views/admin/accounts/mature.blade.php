@@ -110,10 +110,20 @@
                                 </div>
                                 <div class="col-md-6">
                                 <select title="None Selected" name="transfer_to" id="transfer_to" class="form-control transfer_to">
+                                    <option value="">Select Savings Account</option>
                                     @foreach($account->savingsAccounts() as $saving)
                                     <option value="{{ $saving->id }}">{{ $saving->account_number }} </option>
                                     @endforeach
                                 </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="transfer_to_amount_div">
+                                <div class="col-md-3">
+                                    <label class="control-label">Amount to be Transfered to Account</label>
+                                </div>
+                                <div class="col-md-6">
+                                <input type="text" name="transfer_to_amount" class="form-control">
                                 </div>
                             </div>
 
